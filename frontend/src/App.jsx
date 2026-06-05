@@ -8,6 +8,7 @@ import Loans from './pages/Loans.jsx';
 import Login from './pages/Login.jsx';
 import PaymentForm from './pages/PaymentForm.jsx';
 import Payments from './pages/Payments.jsx';
+import Register from './pages/Register.jsx';
 
 const pages = {
   Dashboard: <Dashboard />,
@@ -22,9 +23,11 @@ const pages = {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activePage, setActivePage] = useState('Dashboard');
+  const [showRegister, setShowRegister] = useState(() => window.location.hash === '#register');
 
   const handleLogin = (event) => {
     event.preventDefault();
+    setShowRegister(false);
     setIsLoggedIn(true);
   };
 
@@ -33,8 +36,22 @@ function App() {
     setActivePage('Dashboard');
   };
 
+  const showRegisterPage = () => {
+    window.location.hash = 'register';
+    setShowRegister(true);
+  };
+
+  const showLoginPage = () => {
+    window.location.hash = 'login';
+    setShowRegister(false);
+  };
+
   if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
+    return showRegister ? (
+      <Register onBackToLogin={showLoginPage} />
+    ) : (
+      <Login onLogin={handleLogin} onShowRegister={showRegisterPage} />
+    );
   }
 
   return (

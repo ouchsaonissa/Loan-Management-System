@@ -1,4 +1,4 @@
-function Login({ onLogin }) {
+function Login({ onLogin, onShowRegister }) {
   return (
     <main className="login-page">
       <section className="login-card" aria-labelledby="login-title">
@@ -36,6 +36,13 @@ function Login({ onLogin }) {
 
           <button className="login-button" type="submit">Login</button>
         </form>
+
+        <p className="auth-switch-text">
+          New to LMS?{' '}
+          <a className="auth-switch-link" href="#register" onClick={onShowRegister}>
+            Create an account
+          </a>
+        </p>
 
         <p className="login-note">
           Demo account: <strong>admin</strong> / <strong>admin123</strong>

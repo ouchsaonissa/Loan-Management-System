@@ -354,3 +354,33 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.register-card {
+  max-width: 520px;
+}
+
+.register-header {
+  margin-bottom: 1.5rem;
+}
+
+.register-form {
+  gap: 0.85rem;
+}
+
+.auth-switch-text {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 1.15rem 0 0;
+  text-align: center;
+}
+
+.auth-switch-link {
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.auth-switch-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
