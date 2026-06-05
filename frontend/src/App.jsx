@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Layout from './components/Layout.jsx';
+import CustomerLayout from './components/customer/CustomerLayout.jsx';
 import CustomerForm from './pages/CustomerForm.jsx';
 import Customers from './pages/Customers.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -9,8 +10,13 @@ import Login from './pages/Login.jsx';
 import PaymentForm from './pages/PaymentForm.jsx';
 import Payments from './pages/Payments.jsx';
 import Register from './pages/Register.jsx';
+import ApplyLoan from './pages/customer/ApplyLoan.jsx';
+import CustomerDashboard from './pages/customer/CustomerDashboard.jsx';
+import MyLoanApplications from './pages/customer/MyLoanApplications.jsx';
+import MyLoanStatus from './pages/customer/MyLoanStatus.jsx';
+import MyPaymentHistory from './pages/customer/MyPaymentHistory.jsx';
 
-const pages = {
+const adminPages = {
   Dashboard: <Dashboard />,
   Customers: <Customers />,
   'Customer Form': <CustomerForm />,
@@ -18,6 +24,14 @@ const pages = {
   'Loan Form': <LoanForm />,
   Payments: <Payments />,
   'Payment Form': <PaymentForm />,
+};
+
+const customerPages = {
+  'Customer Dashboard': CustomerDashboard,
+  'My Loan Status': MyLoanStatus,
+  'My Applications': MyLoanApplications,
+  'Payment History': MyPaymentHistory,
+  'Apply for Loan': ApplyLoan,
 };
 
 function App() {
@@ -33,6 +47,14 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setActivePage('Dashboard');
+  };
+
+  const showCustomerPortal = () => {
+    setActivePage('Customer Dashboard');
+  };
+
+  const showAdminDashboard = () => {
     setActivePage('Dashboard');
   };
 
@@ -54,9 +76,29 @@ function App() {
     );
   }
 
+  const CustomerPage = customerPages[activePage];
+
+  if (CustomerPage) {
+    return (
+      <CustomerLayout
+        activePage={activePage}
+        onBackToAdmin={showAdminDashboard}
+        onLogout={handleLogout}
+        onNavigate={setActivePage}
+      >
+        <CustomerPage onNavigate={setActivePage} />
+      </CustomerLayout>
+    );
+  }
+
   return (
-    <Layout activePage={activePage} onLogout={handleLogout} onNavigate={setActivePage}>
-      {pages[activePage]}
+    <Layout
+      activePage={activePage}
+      onCustomerPortal={showCustomerPortal}
+      onLogout={handleLogout}
+      onNavigate={setActivePage}
+    >
+      {adminPages[activePage]}
     </Layout>
   );
 }
