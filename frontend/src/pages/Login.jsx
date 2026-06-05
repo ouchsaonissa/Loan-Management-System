@@ -1,30 +1,47 @@
 function Login({ onLogin }) {
   return (
-    <div className="login-page">
-      <div className="login-card shadow-lg">
-        <div className="text-center mb-4">
-          <div className="login-logo mx-auto">LMS</div>
-          <h2 className="mt-3 mb-1">Welcome back</h2>
-          <p className="text-muted mb-0">Sign in to view the sample dashboard.</p>
+    <main className="login-page">
+      <section className="login-card" aria-labelledby="login-title">
+        <div className="login-header">
+          <div className="login-logo" aria-hidden="true">LMS</div>
+          <p className="login-kicker">Loan Management System</p>
+          <h1 id="login-title">Welcome back</h1>
+          <p className="login-subtitle">Sign in to continue managing customers, loans, and payments.</p>
         </div>
 
-        <form onSubmit={onLogin}>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="username">Username</label>
-            <input className="form-control" id="username" type="text" defaultValue="admin" />
+        <form className="login-form" onSubmit={onLogin}>
+          <div className="login-field">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Enter username"
+              autoComplete="username"
+              defaultValue="admin"
+            />
           </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="password">Password</label>
-            <input className="form-control" id="password" type="password" defaultValue="admin123" />
+
+          <div className="login-field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              autoComplete="current-password"
+              defaultValue="admin123"
+            />
           </div>
-          <button className="btn btn-primary w-100" type="submit">Login</button>
+
+          <button className="login-button" type="submit">Login</button>
         </form>
 
-        <div className="alert alert-light border mt-4 mb-0 small">
+        <p className="login-note">
           Demo account: <strong>admin</strong> / <strong>admin123</strong>
-        </div>
-      </div>
-    </div>
+        </p>
+      </section>
+    </main>
   );
 }
 
