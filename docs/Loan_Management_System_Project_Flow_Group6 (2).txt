@@ -1,0 +1,620 @@
+UPDATED PROJECT FLOW: Loan Management System - Group 6
+Spring Boot Backend + React Frontend Version
+
+Project Topic:
+Loan Management System
+
+Main Goal:
+Build a small, complete, working Loan Management System using Spring Boot for the backend and React for the frontend. The project must be simple enough to finish in about 10 days, but still satisfy the final DevOps project requirements.
+
+Group Members:
+1. Bun Piseth
+2. Ly Bunchheang
+3. Ork Solychomnith
+4. Ouch Saonisa
+5. Hiem Rika
+6. Samoeun Sophanukk
+
+Main Roles:
+- Ly Bunchheang: Backend Developer
+- Ouch Saonisa: Frontend Developer
+- Bun Piseth: DevOps Engineer
+- Ork Solychomnith: Database / Backend Support
+- Hiem Rika: QA / Tester
+- Samoeun Sophanukk: Documentation / Git Support
+
+Technology Stack:
+
+Backend:
+- Java Spring Boot
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- MySQL Driver
+- Validation
+- REST API
+- Maven
+
+Frontend:
+- React
+- Vite
+- HTML
+- CSS
+- Bootstrap
+- Axios
+
+Database:
+- MySQL
+
+DevOps:
+- Docker
+- Docker Compose
+- GitHub Actions
+- Prometheus and Grafana basic monitoring
+- Terraform basic files
+- Deployment using VM/Cloud or deployment explanation
+
+Project Objective:
+Build a production-like Loan Management System with authentication, CRUD modules, database, REST API, React frontend, Docker, CI/CD, monitoring, security, testing, Terraform, and deployment explanation.
+
+Simple Project Scope:
+The system should include:
+1. Login / Logout
+2. Dashboard
+3. Customer Management CRUD
+4. Loan Management CRUD
+5. Payment Management CRUD
+6. Basic REST API
+7. React frontend connected to Spring Boot backend
+
+System Users:
+For the first working version, keep it simple:
+- Admin / Staff user only
+
+Demo Account:
+- Username: admin
+- Password: admin123
+
+Optional later:
+- Customer role
+- Staff role
+- Admin role
+
+Main Modules:
+
+1. Authentication Module
+Features:
+- Login
+- Logout
+- Protected dashboard/pages
+
+Recommended for 10 days:
+Use simple Spring Security authentication or a simple backend login API first.
+Do not use JWT unless the basic app already works.
+
+2. Customer Management Module
+CRUD Features:
+- Add customer
+- View customer list
+- Edit customer
+- Delete customer
+
+Customer Fields:
+- id
+- firstName
+- lastName
+- email
+- phoneNumber
+- address optional
+
+3. Loan Management Module
+CRUD Features:
+- Add loan
+- View loan list
+- Edit loan
+- Delete loan
+- Approve loan
+- Reject loan
+
+Loan Fields:
+- id
+- loanNumber
+- amount
+- interestRate
+- termInMonths
+- status
+- customerId
+
+Loan Status:
+- PENDING
+- APPROVED
+- REJECTED
+- COMPLETED
+
+4. Payment Management Module
+CRUD Features:
+- Add payment
+- View payment list
+- Edit payment
+- Delete payment
+
+Payment Fields:
+- id
+- loanId
+- amount
+- paymentDate
+- status
+
+Payment Status:
+- PAID
+- UNPAID
+- LATE
+
+Database Design:
+Main tables:
+1. users
+2. customers
+3. loans
+4. payments
+
+Relationships:
+- One customer can have many loans
+- One loan can have many payments
+
+Recommended Project Folder Structure:
+
+loan-management-system/
+|
+├── backend/
+│   ├── src/main/java/com/group6/loanmanagement/
+│   │   ├── LoanManagementApplication.java
+│   │   ├── config/
+│   │   │   ├── SecurityConfig.java
+│   │   │   └── CorsConfig.java
+│   │   ├── controller/
+│   │   │   ├── AuthController.java
+│   │   │   ├── CustomerController.java
+│   │   │   ├── LoanController.java
+│   │   │   └── PaymentController.java
+│   │   ├── entity/
+│   │   │   ├── User.java
+│   │   │   ├── Customer.java
+│   │   │   ├── Loan.java
+│   │   │   ├── Payment.java
+│   │   │   └── LoanStatus.java
+│   │   ├── repository/
+│   │   │   ├── UserRepository.java
+│   │   │   ├── CustomerRepository.java
+│   │   │   ├── LoanRepository.java
+│   │   │   └── PaymentRepository.java
+│   │   ├── service/
+│   │   │   ├── UserService.java
+│   │   │   ├── CustomerService.java
+│   │   │   ├── LoanService.java
+│   │   │   └── PaymentService.java
+│   │   └── dto/
+│   │       ├── LoginRequest.java
+│   │       ├── LoginResponse.java
+│   │       ├── CustomerDto.java
+│   │       ├── LoanDto.java
+│   │       └── PaymentDto.java
+│   ├── src/main/resources/
+│   │   └── application.properties
+│   ├── src/test/java/com/group6/loanmanagement/
+│   │   ├── CustomerServiceTest.java
+│   │   ├── LoanServiceTest.java
+│   │   └── PaymentServiceTest.java
+│   ├── pom.xml
+│   └── Dockerfile
+|
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── axiosConfig.js
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   └── Layout.jsx
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Customers.jsx
+│   │   │   ├── CustomerForm.jsx
+│   │   │   ├── Loans.jsx
+│   │   │   ├── LoanForm.jsx
+│   │   │   ├── Payments.jsx
+│   │   │   └── PaymentForm.jsx
+│   │   ├── styles/
+│   │   │   └── style.css
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   ├── vite.config.js
+│   └── Dockerfile
+|
+├── docker-compose.yml
+├── .env.example
+├── README.md
+├── docs/
+├── terraform/
+└── .github/workflows/ci.yml
+
+Backend API Endpoints:
+
+Authentication:
+- POST /api/auth/login
+- POST /api/auth/logout optional
+
+Customer API:
+- GET /api/customers
+- GET /api/customers/{id}
+- POST /api/customers
+- PUT /api/customers/{id}
+- DELETE /api/customers/{id}
+
+Loan API:
+- GET /api/loans
+- GET /api/loans/{id}
+- POST /api/loans
+- PUT /api/loans/{id}
+- DELETE /api/loans/{id}
+- PUT /api/loans/{id}/approve
+- PUT /api/loans/{id}/reject
+
+Payment API:
+- GET /api/payments
+- GET /api/payments/{id}
+- POST /api/payments
+- PUT /api/payments/{id}
+- DELETE /api/payments/{id}
+
+Frontend Pages:
+Ouch Saonisa works on these React pages:
+1. Login.jsx
+2. Dashboard.jsx
+3. Customers.jsx
+4. CustomerForm.jsx
+5. Loans.jsx
+6. LoanForm.jsx
+7. Payments.jsx
+8. PaymentForm.jsx
+
+Frontend Components:
+1. Navbar.jsx
+2. Sidebar.jsx
+3. Layout.jsx
+
+Frontend API File:
+1. axiosConfig.js
+
+Frontend Style File:
+1. style.css
+
+Role Responsibilities:
+
+Ly Bunchheang - Backend Developer:
+Work inside:
+- backend/src/main/java/com/group6/loanmanagement/
+
+Main tasks:
+- Create Spring Boot backend
+- Create entities
+- Create repositories
+- Create services
+- Create controllers
+- Create REST APIs
+- Add Spring Security
+- Add CORS config for React
+- Add validation
+- Connect MySQL database
+- Fix backend errors
+
+Ouch Saonisa - Frontend Developer:
+Work inside:
+- frontend/src/
+
+Main tasks:
+- Create React frontend using Vite
+- Create React pages
+- Create dashboard UI
+- Create customer pages
+- Create loan pages
+- Create payment pages
+- Create login page
+- Use Axios to connect frontend with backend APIs
+- Design layout with Bootstrap/CSS
+- Make buttons, forms, tables, navbar/sidebar
+- Keep UI clean and simple
+
+Bun Piseth - DevOps Engineer:
+Work on:
+- backend/Dockerfile
+- frontend/Dockerfile
+- docker-compose.yml
+- .github/workflows/ci.yml
+- Prometheus/Grafana basic setup
+- .env.example
+
+Main tasks:
+- Dockerize backend
+- Dockerize frontend
+- Dockerize MySQL
+- Create GitHub Actions workflow
+- Add monitoring config
+- Help run project using Docker Compose
+
+Ork Solychomnith - Database / Backend Support:
+Work on:
+- Database structure
+- Entity relationships
+- Sample data
+- Check MySQL tables
+- Help backend CRUD
+
+Hiem Rika - QA / Tester:
+Work on:
+- backend/src/test/java/
+- postman/
+
+Main tasks:
+- Unit tests
+- API testing
+- Postman collection
+- Test CRUD features
+- Test login
+- Report bugs
+
+Samoeun Sophanukk - Documentation / Git Support:
+Work on:
+- README.md
+- docs/
+- screenshots/
+
+Main tasks:
+- Write setup guide
+- Write project description
+- Add team roles
+- Add API endpoint list
+- Add screenshots
+- Track commits and branches
+
+Git Branch Plan:
+- main
+- develop
+- feature/backend
+- feature/frontend
+- feature/devops
+- feature/database
+- feature/testing
+- feature/docs
+
+Development Flow:
+
+Step 1: Setup GitHub
+- Create repo
+- Create develop branch
+- Each member creates their own feature branch
+- Everyone commits their own work
+
+Step 2: Backend setup by Ly
+- Create backend Spring Boot project inside backend/
+- Add dependencies:
+  - Spring Web
+  - Spring Data JPA
+  - Spring Security
+  - MySQL Driver
+  - Validation
+  - Spring Boot Actuator
+- Configure MySQL
+- Create simple REST API test endpoint
+- Add CORS config for React frontend
+
+Step 3: Frontend setup by Ouch
+- Create frontend React project inside frontend/ using Vite
+- Install Axios
+- Install Bootstrap
+- Create basic layout
+- Connect to backend test API
+
+Step 4: Customer module
+Backend:
+- Create Customer entity, repository, service, controller, REST API
+
+Frontend:
+- Create Customers.jsx
+- Create CustomerForm.jsx
+- Connect GET, POST, PUT, DELETE APIs with Axios
+
+Step 5: Loan module
+Backend:
+- Create Loan entity, repository, service, controller
+- Add approve/reject logic
+
+Frontend:
+- Create Loans.jsx
+- Create LoanForm.jsx
+- Add approve/reject buttons
+- Connect APIs with Axios
+
+Step 6: Payment module
+Backend:
+- Create Payment entity, repository, service, controller
+
+Frontend:
+- Create Payments.jsx
+- Create PaymentForm.jsx
+- Connect APIs with Axios
+
+Step 7: Authentication
+Backend:
+- Add Spring Security
+- Add login API or simple authentication
+- Allow React frontend through CORS
+
+Frontend:
+- Create Login.jsx
+- Save login state simply
+- Redirect to Dashboard after login
+
+Step 8: Testing
+- Add at least 5 unit tests
+- Test CustomerService
+- Test LoanService
+- Test PaymentService
+- Test loan approval
+- Test API endpoints with Postman
+
+Step 9: Docker
+- Dockerfile for backend
+- Dockerfile for frontend
+- docker-compose.yml with backend, frontend, and MySQL
+
+Step 10: CI/CD
+- GitHub Actions builds backend
+- GitHub Actions builds frontend
+- GitHub Actions runs tests
+
+Step 11: Monitoring
+- Add Spring Boot Actuator
+- Add Prometheus config
+- Add Grafana optional dashboard
+
+Step 12: Terraform
+- Add terraform folder
+- Add main.tf
+- Add variables.tf
+- Add README.md
+- Explain infrastructure setup
+
+Step 13: Documentation
+- README
+- Screenshots
+- How to run backend
+- How to run frontend
+- How to run Docker
+- API endpoints
+- Team roles
+
+Step 14: Final demo
+Demo flow:
+1. Open React frontend
+2. Login
+3. Show dashboard
+4. Add customer
+5. Add loan
+6. Approve/reject loan
+7. Add payment
+8. Show REST API
+9. Show GitHub commits and branches
+10. Show Docker running
+11. Show GitHub Actions
+12. Show monitoring
+13. Explain Terraform
+
+10-Day Schedule:
+
+Day 1:
+- Setup backend Spring Boot
+- Setup frontend React
+- Connect frontend to backend test API
+
+Day 2:
+- Build Customer backend CRUD
+- Build Customer frontend UI
+
+Day 3:
+- Build Loan backend CRUD
+- Build Loan frontend UI
+
+Day 4:
+- Build Payment backend CRUD
+- Build Payment frontend UI
+
+Day 5:
+- Add login/security
+- Improve dashboard UI
+
+Day 6:
+- Add REST API testing
+- Fix bugs
+
+Day 7:
+- Add unit tests
+- Add Postman API tests
+
+Day 8:
+- Add Docker and Docker Compose
+
+Day 9:
+- Add GitHub Actions
+- Add monitoring basic
+
+Day 10:
+- Add Terraform basic
+- Update README
+- Final test and cleanup
+
+Commit Plan for 20+ Commits:
+
+Backend commits:
+1. Create backend Spring Boot project
+2. Add database configuration
+3. Add customer entity and repository
+4. Add customer service and controller
+5. Add loan entity and repository
+6. Add loan service and controller
+7. Add loan approve/reject feature
+8. Add payment entity and repository
+9. Add payment service and controller
+10. Add authentication and security config
+
+Frontend commits:
+11. Create React frontend project
+12. Add login page UI
+13. Add dashboard UI
+14. Add customer list page
+15. Add customer form page
+16. Add loan list page
+17. Add loan form page
+18. Add payment list page
+19. Add payment form page
+20. Improve frontend styling and layout
+
+DevOps/testing/docs commits:
+21. Add Docker setup
+22. Add GitHub Actions CI workflow
+23. Add unit tests
+24. Add monitoring configuration
+25. Add Terraform files
+26. Update README documentation
+
+Important Rules:
+1. Keep the project small and working.
+2. Do not add JWT unless the simple app already works.
+3. Do not add Kubernetes, Redis, ELK, email, or PDF export now.
+4. Backend and frontend should be separated.
+5. Backend provides REST API.
+6. Frontend calls backend API using Axios.
+7. Each member commits their own work.
+8. The group needs 20+ commits total.
+9. Finish local working app first, then add DevOps parts.
+10. React frontend should not contain database logic.
+11. Spring Boot backend should not contain React UI pages.
+12. Use environment variables for passwords and database settings.
+
+IMPORTANT FOR CODEX:
+Generate the project step by step.
+First create:
+1. backend/ Spring Boot project
+2. frontend/ React Vite project
+3. MySQL database connection
+4. Simple REST API
+5. React pages connected to API
+
+After the app works, add:
+1. Docker
+2. Tests
+3. GitHub Actions
+4. Prometheus/Grafana
+5. Terraform
+6. Deployment explanation
