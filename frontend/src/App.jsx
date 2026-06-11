@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from './components/Layout.jsx';
 import CustomerLayout from './components/customer/CustomerLayout.jsx';
 import CustomerForm from './pages/CustomerForm.jsx';
@@ -16,89 +16,184 @@ import MyLoanApplications from './pages/customer/MyLoanApplications.jsx';
 import MyLoanStatus from './pages/customer/MyLoanStatus.jsx';
 import MyPaymentHistory from './pages/customer/MyPaymentHistory.jsx';
 
-const adminPages = {
-  Dashboard: <Dashboard />,
-  Customers: <Customers />,
-  'Customer Form': <CustomerForm />,
-  Loans: <Loans />,
-  'Loan Form': <LoanForm />,
-  Payments: <Payments />,
-  'Payment Form': <PaymentForm />,
+const adminRoutes = {
+  '/admin/dashboard': { title: 'Dashboard', page: <Dashboard /> },
+  '/admin/customers': { title: 'Customers', page: <Customers /> },
+  '/admin/customer-form': { title: 'Customer Form', page: <CustomerForm /> },
+  '/admin/loans': { title: 'Loans', page: <Loans /> },
+  '/admin/loan-form': { title: 'Loan Form', page: <LoanForm /> },
+  '/admin/payments': { title: 'Payments', page: <Payments /> },
+  '/admin/payment-form': { title: 'Payment Form', page: <PaymentForm /> },
 };
 
-const customerPages = {
-  'Customer Dashboard': CustomerDashboard,
-  'My Loan Status': MyLoanStatus,
-  'My Applications': MyLoanApplications,
-  'Payment History': MyPaymentHistory,
-  'Apply for Loan': ApplyLoan,
+const customerRoutes = {
+  '/customer/dashboard': { title: 'Customer Dashboard', page: CustomerDashboard },
+  '/customer/my-loan-status': { title: 'My Loan Status', page: MyLoanStatus },
+  '/customer/my-applications': { title: 'My Applications', page: MyLoanApplications },
+  '/customer/payment-history': { title: 'Payment History', page: MyPaymentHistory },
+  '/customer/apply-loan': { title: 'Apply for Loan', page: ApplyLoan },
 };
+
+const customerLabelPaths = Object.fromEntries(
+  Object.entries(customerRoutes).map(([path, route]) => [route.title, path]),
+);
+
+function getCurrentUser() {
+  return {
+    accessToken: localStorage.getItem('accessToken'),
+    refreshToken: localStorage.getItem('refreshToken'),
+    username: localStorage.getItem('username'),
+    fullName: localStorage.getItem('fullName'),
+    role: localStorage.getItem('role')?.toUpperCase(),
+    userId: localStorage.getItem('userId'),
+  };
+}
+
+function isAdminRole(role) {
+  return role === 'ADMIN' || role === 'STAFF';
+}
+
+function isCustomerRole(role) {
+  return role === 'CUSTOMER';
+}
+
+function getDashboardPath(role) {
+  if (isAdminRole(role)) {
+    return '/admin/dashboard';
+  }
+
+  if (isCustomerRole(role)) {
+    return '/customer/dashboard';
+  }
+
+  return '/login';
+}
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activePage, setActivePage] = useState('Dashboard');
-  const [showRegister, setShowRegister] = useState(() => window.location.hash === '#register');
+  const [currentPath, setCurrentPath] = useState(window.location.pathname || '/login');
+  const [currentUser, setCurrentUser] = useState(getCurrentUser);
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    setShowRegister(false);
-    setIsLoggedIn(true);
+  const navigateTo = (path, replace = false) => {
+    if (window.location.pathname !== path) {
+      if (replace) {
+        window.history.replaceState({}, '', path);
+      } else {
+        window.history.pushState({}, '', path);
+      }
+    }
+
+    setCurrentPath(path);
+  };
+
+  useEffect(() => {
+    const handlePopState = () => setCurrentPath(window.location.pathname || '/login');
+    window.addEventListener('popstate', handlePopState);
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const { accessToken, role } = currentUser;
+    const isLoggedIn = Boolean(accessToken && role);
+
+    if (!isLoggedIn) {
+      if (currentPath !== '/login' && currentPath !== '/register') {
+        navigateTo('/login', true);
+      }
+      return;
+    }
+
+    if (currentPath === '/' || currentPath === '/login' || currentPath === '/register') {
+      navigateTo(getDashboardPath(role), true);
+      return;
+    }
+
+    if (currentPath.startsWith('/admin') && !isAdminRole(role)) {
+      navigateTo(getDashboardPath(role), true);
+      return;
+    }
+
+    if (currentPath.startsWith('/customer') && !isCustomerRole(role)) {
+      navigateTo(getDashboardPath(role), true);
+      return;
+    }
+
+    if (!adminRoutes[currentPath] && !customerRoutes[currentPath]) {
+      navigateTo(getDashboardPath(role), true);
+    }
+  }, [currentPath, currentUser]);
+
+  const handleLogin = (loginData) => {
+    const userData = {
+      accessToken: loginData.accessToken,
+      refreshToken: loginData.refreshToken,
+      username: loginData.username,
+      fullName: loginData.fullName,
+      role: loginData.role?.toUpperCase(),
+      userId: loginData.userId,
+    };
+
+    Object.entries(userData).forEach(([key, value]) => {
+      localStorage.setItem(key, value ?? '');
+    });
+
+    setCurrentUser(userData);
+    navigateTo(getDashboardPath(userData.role), true);
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setActivePage('Dashboard');
+    localStorage.clear();
+    setCurrentUser(getCurrentUser());
+    navigateTo('/login', true);
   };
 
-  const showCustomerPortal = () => {
-    setActivePage('Customer Dashboard');
+  const handleCustomerNavigate = (pageLabelOrPath) => {
+    navigateTo(customerLabelPaths[pageLabelOrPath] || pageLabelOrPath);
   };
 
-  const showAdminDashboard = () => {
-    setActivePage('Dashboard');
-  };
-
-  const showRegisterPage = () => {
-    window.location.hash = 'register';
-    setShowRegister(true);
-  };
-
-  const showLoginPage = () => {
-    window.location.hash = 'login';
-    setShowRegister(false);
-  };
-
-  if (!isLoggedIn) {
-    return showRegister ? (
-      <Register onBackToLogin={showLoginPage} />
-    ) : (
-      <Login onLogin={handleLogin} onShowRegister={showRegisterPage} />
-    );
+  if (currentPath === '/register' && !currentUser.accessToken) {
+    return <Register onBackToLogin={() => navigateTo('/login')} />;
   }
 
-  const CustomerPage = customerPages[activePage];
+  if (!currentUser.accessToken || currentPath === '/login') {
+    return <Login onLogin={handleLogin} onShowRegister={() => navigateTo('/register')} />;
+  }
 
-  if (CustomerPage) {
+  if (currentPath.startsWith('/admin') && !isAdminRole(currentUser.role)) {
+    return null;
+  }
+
+  if (currentPath.startsWith('/customer') && !isCustomerRole(currentUser.role)) {
+    return null;
+  }
+
+  const customerRoute = customerRoutes[currentPath];
+
+  if (customerRoute) {
+    const CustomerPage = customerRoute.page;
+
     return (
       <CustomerLayout
-        activePage={activePage}
-        onBackToAdmin={showAdminDashboard}
+        activePage={customerRoute.title}
+        currentUser={currentUser}
         onLogout={handleLogout}
-        onNavigate={setActivePage}
+        onNavigate={handleCustomerNavigate}
       >
-        <CustomerPage onNavigate={setActivePage} />
+        <CustomerPage onNavigate={handleCustomerNavigate} />
       </CustomerLayout>
     );
   }
 
+  const adminRoute = adminRoutes[currentPath] || adminRoutes['/admin/dashboard'];
+
   return (
     <Layout
-      activePage={activePage}
-      onCustomerPortal={showCustomerPortal}
+      activePage={adminRoute.title}
+      currentUser={currentUser}
       onLogout={handleLogout}
-      onNavigate={setActivePage}
+      onNavigate={navigateTo}
     >
-      {adminPages[activePage]}
+      {adminRoute.page}
     </Layout>
   );
 }

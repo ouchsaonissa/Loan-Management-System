@@ -1,11 +1,11 @@
 const menuItems = [
-  { label: 'Dashboard', icon: '📊' },
-  { label: 'Customers', icon: '👥' },
-  { label: 'Customer Form', icon: '📝' },
-  { label: 'Loans', icon: '💰' },
-  { label: 'Loan Form', icon: '📄' },
-  { label: 'Payments', icon: '💳' },
-  { label: 'Payment Form', icon: '✅' },
+  { label: 'Dashboard', icon: '📊', path: '/admin/dashboard' },
+  { label: 'Customers', icon: '👥', path: '/admin/customers' },
+  { label: 'Customer Form', icon: '📝', path: '/admin/customer-form' },
+  { label: 'Loans', icon: '💰', path: '/admin/loans' },
+  { label: 'Loan Form', icon: '📄', path: '/admin/loan-form' },
+  { label: 'Payments', icon: '💳', path: '/admin/payments' },
+  { label: 'Payment Form', icon: '✅', path: '/admin/payment-form' },
 ];
 
 function Sidebar({ activePage, onNavigate }) {
@@ -25,7 +25,7 @@ function Sidebar({ activePage, onNavigate }) {
             className={`sidebar-link ${activePage === item.label ? 'active' : ''}`}
             key={item.label}
             type="button"
-            onClick={() => onNavigate(item.label)}
+            onClick={() => onNavigate(item.path)}
           >
             <span>{item.icon}</span>
             {item.label}
@@ -37,4 +37,3 @@ function Sidebar({ activePage, onNavigate }) {
 }
 
 export default Sidebar;
-

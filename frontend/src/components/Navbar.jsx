@@ -1,4 +1,4 @@
-function Navbar({ activePage, onCustomerPortal, onLogout }) {
+function Navbar({ activePage, currentUser, onLogout }) {
   return (
     <nav className="navbar navbar-expand-lg app-navbar">
       <div className="container-fluid px-4">
@@ -8,14 +8,9 @@ function Navbar({ activePage, onCustomerPortal, onLogout }) {
         </div>
         <div className="d-flex align-items-center gap-3">
           <div className="text-end d-none d-sm-block">
-            <p className="user-name mb-0">Ouch Saonisa</p>
-            <small className="text-muted">Frontend Developer</small>
+            <p className="user-name mb-0">{currentUser?.fullName || currentUser?.username || 'Admin user'}</p>
+            <small className="text-muted">{currentUser?.role || 'ADMIN'}</small>
           </div>
-          {onCustomerPortal && (
-            <button className="btn btn-outline-primary btn-sm" type="button" onClick={onCustomerPortal}>
-              Customer Portal
-            </button>
-          )}
           <button className="btn btn-outline-primary btn-sm" type="button" onClick={onLogout}>
             Logout
           </button>
