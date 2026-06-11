@@ -1,6 +1,6 @@
 import CustomerSidebar from './CustomerSidebar.jsx';
 
-function CustomerLayout({ activePage, children, onBackToAdmin, onLogout, onNavigate }) {
+function CustomerLayout({ activePage, children, currentUser, onLogout, onNavigate }) {
   return (
     <div className="app-shell customer-shell">
       <CustomerSidebar activePage={activePage} onNavigate={onNavigate} />
@@ -13,12 +13,9 @@ function CustomerLayout({ activePage, children, onBackToAdmin, onLogout, onNavig
             </div>
             <div className="d-flex align-items-center gap-2 gap-md-3">
               <div className="text-end d-none d-md-block">
-                <p className="user-name mb-0">Sreynich Sok</p>
+                <p className="user-name mb-0">{currentUser?.fullName || currentUser?.username || 'Customer user'}</p>
                 <small className="text-muted">Customer account</small>
               </div>
-              <button className="btn btn-outline-primary btn-sm" type="button" onClick={onBackToAdmin}>
-                Admin Dashboard
-              </button>
               <button className="btn btn-primary btn-sm" type="button" onClick={onLogout}>
                 Logout
               </button>

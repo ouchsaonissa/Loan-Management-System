@@ -1,9 +1,9 @@
 const customerMenuItems = [
-  { label: 'Customer Dashboard', icon: '🏠' },
-  { label: 'My Loan Status', icon: '📌' },
-  { label: 'My Applications', icon: '📋' },
-  { label: 'Payment History', icon: '💳' },
-  { label: 'Apply for Loan', icon: '📝' },
+  { label: 'Customer Dashboard', icon: '🏠', path: '/customer/dashboard' },
+  { label: 'My Loan Status', icon: '📌', path: '/customer/my-loan-status' },
+  { label: 'My Applications', icon: '📋', path: '/customer/my-applications' },
+  { label: 'Payment History', icon: '💳', path: '/customer/payment-history' },
+  { label: 'Apply for Loan', icon: '📝', path: '/customer/apply-loan' },
 ];
 
 function CustomerSidebar({ activePage, onNavigate }) {
@@ -23,7 +23,7 @@ function CustomerSidebar({ activePage, onNavigate }) {
             className={`sidebar-link ${activePage === item.label ? 'active' : ''}`}
             key={item.label}
             type="button"
-            onClick={() => onNavigate(item.label)}
+            onClick={() => onNavigate(item.path)}
           >
             <span>{item.icon}</span>
             {item.label}
