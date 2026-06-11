@@ -18,10 +18,10 @@ The project will be built step by step. The first priority is a local working ap
 | --- | --- |
 | Ly Bunchheang | Backend Developer |
 | Ouch Saonisa | Frontend Developer |
-| Bun Piseth | DevOps Engineer |
-| Ork Solychomnith | Database / Backend Support |
+| Bun Piseth | Git(CI CD) |
 | Hiem Rika | QA / Tester |
 | Samoeun Sophanukk | Documentation / Git Support |
+| Ork Solychomnith | Documentation |
 
 ## Current Project Structure
 

@@ -37,3 +37,4 @@ function Sidebar({ activePage, onNavigate }) {
 }
 
 export default Sidebar;
+

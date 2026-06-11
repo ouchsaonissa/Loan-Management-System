@@ -1,7 +1,7 @@
 const customers = [
   { id: 1, name: 'Sophea Chan', email: 'sophea@example.com', phone: '012 345 678', city: 'Phnom Penh' },
   { id: 2, name: 'Dara Kim', email: 'dara@example.com', phone: '015 222 333', city: 'Siem Reap' },
-  { id: 3, name: 'Rina Sok', email: 'rina@example.com', phone: '017 444 555', city: 'Battambang' },
+  { id: 3, name: 'Rika Lyna', email: 'rina@example.com', phone: '017 444 555', city: 'Battambang' },
 ];
 
 function Customers() {
