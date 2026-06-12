@@ -50,7 +50,7 @@ function getCurrentUser() {
 }
 
 function isAdminRole(role) {
-  return role === 'ADMIN' || role === 'STAFF';
+  return role === 'ADMIN';
 }
 
 function isCustomerRole(role) {
@@ -152,7 +152,12 @@ function App() {
   };
 
   if (currentPath === '/register' && !currentUser.accessToken) {
-    return <Register onBackToLogin={() => navigateTo('/login')} />;
+    return (
+      <Register
+        onBackToLogin={() => navigateTo('/login')}
+        onRegisterSuccess={handleLogin}
+      />
+    );
   }
 
   if (!currentUser.accessToken || currentPath === '/login') {
