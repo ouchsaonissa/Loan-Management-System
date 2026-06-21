@@ -10,6 +10,7 @@ import com.group6.loanmanagement.entity.Role;
 import com.group6.loanmanagement.entity.User;
 import com.group6.loanmanagement.repository.CustomerRepository;
 import com.group6.loanmanagement.repository.UserRepository;
+import java.math.BigDecimal;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,13 +51,6 @@ public class AuthService {
         }
 
         Role role = request.getRole() == null ? Role.CUSTOMER : request.getRole();
-        if (role == Role.CUSTOMER) {
-            validateCustomerProfile(request);
-            String email = normalize(request.getEmail());
-            if (customerRepository.existsByEmail(email)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Customer email already exists");
-            }
-        }
 
         User user = new User();
         user.setUsername(username);
@@ -67,13 +61,13 @@ public class AuthService {
         User savedUser = userRepository.save(user);
         if (savedUser.getRole() == Role.CUSTOMER) {
             Customer customer = new Customer();
-            customer.setFullName(savedUser.getFullName());
-            customer.setGender(request.getGender().trim());
-            customer.setEmail(normalize(request.getEmail()));
-            customer.setPhoneNumber(request.getPhoneNumber().trim());
-            customer.setAddress(request.getAddress().trim());
-            customer.setJob(request.getJob().trim());
-            customer.setMonthlyIncome(request.getMonthlyIncome());
+            customer.setFullName(request.getFullName());
+            customer.setGender("Not Set");
+            customer.setEmail(username + "@pending.local");
+            customer.setPhoneNumber("-");
+            customer.setAddress("-");
+            customer.setJob("-");
+            customer.setMonthlyIncome(BigDecimal.ZERO);
             customer.setUser(savedUser);
             customerRepository.save(customer);
         }
@@ -103,21 +97,6 @@ public class AuthService {
         return buildAuthResponse(refreshToken.getUser(), refreshToken.getToken());
     }
 
-    private void validateCustomerProfile(RegisterRequest request) {
-        if (isBlank(request.getGender()) || isBlank(request.getEmail()) || isBlank(request.getPhoneNumber())
-                || isBlank(request.getAddress()) || isBlank(request.getJob()) || request.getMonthlyIncome() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Customer registration requires gender, email, phone number, address, job, and monthly income");
-        }
-    }
-
-    private boolean isBlank(String value) {
-        return value == null || value.trim().isEmpty();
-    }
-
-    private String normalize(String value) {
-        return value == null ? null : value.trim().toLowerCase();
-    }
 
     private AuthResponse buildAuthResponse(User user, String refreshToken) {
         return new AuthResponse(
