@@ -14,8 +14,6 @@ import Register from './pages/Register.jsx';
 import ApplyLoan from './pages/customer/ApplyLoan.jsx';
 import CustomerDashboard from './pages/customer/CustomerDashboard.jsx';
 import MyLoanApplications from './pages/customer/MyLoanApplications.jsx';
-import MyLoanStatus from './pages/customer/MyLoanStatus.jsx';
-import MyPaymentHistory from './pages/customer/MyPaymentHistory.jsx';
 
 const adminRoutes = {
   '/admin/dashboard': { title: 'Dashboard', page: <Dashboard /> },
@@ -28,11 +26,20 @@ const adminRoutes = {
 };
 
 const customerRoutes = {
-  '/customer/dashboard': { title: 'Customer Dashboard', page: CustomerDashboard },
-  '/customer/my-loan-status': { title: 'My Loan Status', page: MyLoanStatus },
-  '/customer/my-applications': { title: 'My Applications', page: MyLoanApplications },
-  '/customer/payment-history': { title: 'Payment History', page: MyPaymentHistory },
-  '/customer/apply-loan': { title: 'Apply for Loan', page: ApplyLoan },
+  '/customer/dashboard': {
+    title: 'Customer Dashboard',
+    page: CustomerDashboard,
+  },
+
+  '/customer/my-applications': {
+    title: 'My Applications',
+    page: MyLoanApplications,
+  },
+
+  '/customer/apply-loan': {
+    title: 'Apply for Loan',
+    page: ApplyLoan,
+  },
 };
 
 const customerLabelPaths = Object.fromEntries(

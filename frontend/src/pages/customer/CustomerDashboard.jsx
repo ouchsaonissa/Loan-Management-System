@@ -18,12 +18,12 @@ function CustomerDashboard({ onNavigate }) {
 
   const loadLoans = async () => {
     try {
-      const userId = localStorage.getItem("userId");
+      const customerId = localStorage.getItem("userId");
 
       const { data } = await apiClient.get("/loans");
 
       const myLoans = data.filter(
-        (loan) => loan.customerId === userId
+        (loan) => loan.customerId === customerId
       );
 
       setStats({
@@ -39,26 +39,24 @@ function CustomerDashboard({ onNavigate }) {
         ).length,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Failed to load loans", error);
     }
   };
 
   return (
     <div className="customer-page">
-
       <div className="welcome-card customer-welcome mb-4">
         <div className="row align-items-center">
-
           <div className="col-lg-8">
             <p className="eyebrow mb-2">
-              Welcome back, {fullName}
+              Welcome, {fullName}
             </p>
 
             <h1>Customer Loan Dashboard</h1>
 
             <p>
-              View all your loan applications and
-              track approval status.
+              View your loan applications and track
+              approval status.
             </p>
           </div>
 
@@ -72,17 +70,15 @@ function CustomerDashboard({ onNavigate }) {
               Apply for New Loan
             </button>
           </div>
-
         </div>
       </div>
 
       <div className="row g-3">
-
         <div className="col-md-3">
           <div className="card">
             <div className="card-body">
-              <h3>{stats.total}</h3>
-              <p>Total Loans</p>
+              <h2>{stats.total}</h2>
+              <p>Total Applications</p>
             </div>
           </div>
         </div>
@@ -90,7 +86,7 @@ function CustomerDashboard({ onNavigate }) {
         <div className="col-md-3">
           <div className="card">
             <div className="card-body">
-              <h3>{stats.approved}</h3>
+              <h2>{stats.approved}</h2>
               <p>Approved</p>
             </div>
           </div>
@@ -99,7 +95,7 @@ function CustomerDashboard({ onNavigate }) {
         <div className="col-md-3">
           <div className="card">
             <div className="card-body">
-              <h3>{stats.pending}</h3>
+              <h2>{stats.pending}</h2>
               <p>Pending</p>
             </div>
           </div>
@@ -108,14 +104,12 @@ function CustomerDashboard({ onNavigate }) {
         <div className="col-md-3">
           <div className="card">
             <div className="card-body">
-              <h3>{stats.rejected}</h3>
+              <h2>{stats.rejected}</h2>
               <p>Rejected</p>
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }

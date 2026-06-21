@@ -1,39 +1,143 @@
-const loans = [
-  { number: 'LN-1001', customer: 'Sophea Chan', amount: '$5,000', term: '24 months', status: 'APPROVED' },
-  { number: 'LN-1002', customer: 'Dara Kim', amount: '$2,500', term: '12 months', status: 'PENDING' },
-  { number: 'LN-1003', customer: 'Rina Sok', amount: '$7,800', term: '36 months', status: 'COMPLETED' },
-];
+import { useEffect, useState } from "react";
+import apiClient from "../api/axiosConfig";
 
 function Loans() {
+  const [loans, setLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadLoans();
+  }, []);
+
+  const loadLoans = async () => {
+    try {
+      const { data } = await apiClient.get("/loans");
+      setLoans(data);
+    } catch (error) {
+      console.error("Failed to load loans", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const approveLoan = async (id) => {
+    try {
+      await apiClient.put(`/loans/${id}/approve`);
+      loadLoans();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to approve loan");
+    }
+  };
+
+  const rejectLoan = async (id) => {
+    try {
+      await apiClient.put(`/loans/${id}/reject`);
+      loadLoans();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to reject loan");
+    }
+  };
+
   return (
     <div className="card table-card">
       <div className="card-body">
-        <h4 className="mb-1">Loans</h4>
-        <p className="text-muted">Static loan list for the first frontend setup.</p>
+
+        <h4 className="mb-1">Loan Management</h4>
+
+        <p className="text-muted">
+          Review and approve customer loan requests.
+        </p>
+
         <div className="table-responsive">
           <table className="table table-hover align-middle">
+
             <thead>
               <tr>
-                <th>Loan Number</th>
-                <th>Customer</th>
+                <th>Customer ID</th>
                 <th>Amount</th>
                 <th>Term</th>
                 <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
+
             <tbody>
-              {loans.map((loan) => (
-                <tr key={loan.number}>
-                  <td>{loan.number}</td>
-                  <td>{loan.customer}</td>
-                  <td>{loan.amount}</td>
-                  <td>{loan.term}</td>
-                  <td><span className="badge text-bg-secondary">{loan.status}</span></td>
+
+              {loading ? (
+                <tr>
+                  <td colSpan="5">
+                    Loading...
+                  </td>
                 </tr>
-              ))}
+              ) : loans.length === 0 ? (
+                <tr>
+                  <td colSpan="5">
+                    No loans found
+                  </td>
+                </tr>
+              ) : (
+                loans.map((loan) => (
+                  <tr key={loan.id}>
+
+                    <td>{loan.customerId}</td>
+
+                    <td>
+                      ${loan.amount}
+                    </td>
+
+                    <td>
+                      {loan.termMonths} months
+                    </td>
+
+                    <td>
+                      <span
+                        className={`badge ${
+                          loan.status === "APPROVED"
+                            ? "text-bg-success"
+                            : loan.status === "REJECTED"
+                            ? "text-bg-danger"
+                            : "text-bg-warning"
+                        }`}
+                      >
+                        {loan.status}
+                      </span>
+                    </td>
+
+                    <td>
+                      {loan.status === "PENDING" && (
+                        <>
+                          <button
+                            className="btn btn-success btn-sm me-2"
+                            onClick={() =>
+                              approveLoan(loan.id)
+                            }
+                          >
+                            Approve
+                          </button>
+
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() =>
+                              rejectLoan(loan.id)
+                            }
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                    </td>
+
+                  </tr>
+                ))
+              )}
+
             </tbody>
+
           </table>
         </div>
+
       </div>
     </div>
   );

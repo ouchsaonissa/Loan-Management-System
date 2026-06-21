@@ -1,11 +1,16 @@
 const menuItems = [
-  { label: 'Dashboard', icon: '📊', path: '/admin/dashboard' },
-  { label: 'Customers', icon: '👥', path: '/admin/customers' },
-  { label: 'Customer Form', icon: '📝', path: '/admin/customer-form' },
-  { label: 'Loans', icon: '💰', path: '/admin/loans' },
-  { label: 'Loan Form', icon: '📄', path: '/admin/loan-form' },
-  { label: 'Payments', icon: '💳', path: '/admin/payments' },
-  { label: 'Payment Form', icon: '✅', path: '/admin/payment-form' },
+  {
+    label: "Customer Dashboard",
+    icon: "🏠",
+  },
+  {
+    label: "My Applications",
+    icon: "📋",
+  },
+  {
+    label: "Apply for Loan",
+    icon: "📝",
+  },
 ];
 
 function Sidebar({ activePage, onNavigate }) {
