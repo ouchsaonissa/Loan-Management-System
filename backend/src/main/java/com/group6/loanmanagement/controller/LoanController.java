@@ -65,4 +65,8 @@ public class LoanController {
 
         loanService.deleteLoan(id);
     }
+    @GetMapping("/test")
+public String test() {
+    return "Loan API works";
+}
 }

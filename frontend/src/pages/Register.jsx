@@ -44,11 +44,15 @@ function Register({ onBackToLogin, onRegisterSuccess }) {
 
       onRegisterSuccess(data);
     } catch (registerError) {
-      const message = registerError.response?.data?.message || 'Registration failed. Please try again.';
-      setError(message);
-    } finally {
-      setIsSubmitting(false);
-    }
+        console.log(registerError.response);
+        const message =
+        registerError.response?.data?.message ||
+        JSON.stringify(registerError.response?.data) ||
+        registerError.message;
+
+  setError(message);
+  
+}
   };
 
   return (

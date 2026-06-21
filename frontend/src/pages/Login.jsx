@@ -91,10 +91,6 @@ function Login({ onLogin, onShowRegister }) {
             Create an account
           </a>
         </p>
-
-        <p className="login-note">
-          Demo account: <strong>admin</strong> / <strong>admin123</strong>
-        </p>
       </section>
     </main>
   );

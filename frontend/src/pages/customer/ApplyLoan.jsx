@@ -1,28 +1,54 @@
-import { useState } from 'react';
+import { useState } from "react";
+import apiClient from "../../api/axiosConfig.js";
 
 const initialForm = {
-  amount: '',
-  purpose: '',
-  termInMonths: '',
-  monthlyIncome: '',
-  phoneNumber: '',
-  address: '',
+  customerId: localStorage.getItem("userId") || "",
+  amount: "",
+  termMonths: "",
 };
 
 function ApplyLoan() {
   const [formData, setFormData] = useState(initialForm);
-  const [previewMessage, setPreviewMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((currentData) => ({ ...currentData, [name]: value }));
+
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const message = `Preview only: ${formData.purpose || 'Loan'} application for $${formData.amount || '0'} over ${formData.termInMonths || '0'} months is ready for future API submission.`;
-    setPreviewMessage(message);
-    window.alert(message);
+    setMessage("");
+
+    try {
+      const payload = {
+        customerId: localStorage.getItem("userId"),
+        amount: Number(formData.amount),
+        termMonths: Number(formData.termMonths),
+      };
+
+      const { data } = await apiClient.post("/loans", payload);
+
+      setMessage(
+        `Loan created successfully. Status: ${data.status}`
+      );
+
+      setFormData({
+        customerId: localStorage.getItem("userId") || "",
+        amount: "",
+        termMonths: "",
+      });
+
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message ||
+        "Failed to create loan"
+      );
+    }
   };
 
   return (
@@ -31,14 +57,17 @@ function ApplyLoan() {
         <div className="col-12 col-xl-4">
           <div className="card h-100 customer-application-note">
             <div className="card-body">
-              <p className="eyebrow text-primary mb-2">New request</p>
-              <h2 className="mb-3">Apply for a Loan</h2>
-              <p className="text-muted">
-                Complete the sample form to preview a customer application. This page does not connect to the backend yet.
+              <p className="eyebrow text-primary mb-2">
+                New Request
               </p>
-              <div className="customer-tip-box">
-                <strong>Tip:</strong> Use clear loan purpose and accurate income details to help staff review later.
-              </div>
+
+              <h2 className="mb-3">
+                Apply for a Loan
+              </h2>
+
+              <p className="text-muted">
+                Submit a loan request to the backend.
+              </p>
             </div>
           </div>
         </div>
@@ -46,94 +75,86 @@ function ApplyLoan() {
         <div className="col-12 col-xl-8">
           <div className="card form-card">
             <div className="card-body">
-              <form className="row g-3" onSubmit={handleSubmit}>
-                <div className="col-md-6">
-                  <label className="form-label" htmlFor="amount">Loan amount</label>
+
+              <form
+                className="row g-3"
+                onSubmit={handleSubmit}
+              >
+                <div className="col-12">
+                  <label className="form-label">
+                    Customer ID
+                  </label>
+
                   <input
                     className="form-control"
-                    id="amount"
+                    value={formData.customerId}
+                    readOnly
+                  />
+                </div>
+
+                <div className="col-md-6">
+                  <label className="form-label">
+                    Loan Amount
+                  </label>
+
+                  <input
+                    className="form-control"
+                    type="number"
                     min="1"
                     name="amount"
-                    onChange={handleChange}
-                    placeholder="12000"
-                    type="number"
                     value={formData.amount}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label" htmlFor="purpose">Loan purpose</label>
-                  <input
-                    className="form-control"
-                    id="purpose"
-                    name="purpose"
                     onChange={handleChange}
-                    placeholder="Home improvement"
-                    type="text"
-                    value={formData.purpose}
+                    required
                   />
                 </div>
+
                 <div className="col-md-6">
-                  <label className="form-label" htmlFor="termInMonths">Term in months</label>
+                  <label className="form-label">
+                    Term (Months)
+                  </label>
+
                   <select
                     className="form-select"
-                    id="termInMonths"
-                    name="termInMonths"
+                    name="termMonths"
+                    value={formData.termMonths}
                     onChange={handleChange}
-                    value={formData.termInMonths}
+                    required
                   >
-                    <option value="">Choose term</option>
-                    <option value="12">12 months</option>
-                    <option value="18">18 months</option>
-                    <option value="24">24 months</option>
-                    <option value="36">36 months</option>
-                    <option value="48">48 months</option>
+                    <option value="">
+                      Select Term
+                    </option>
+
+                    <option value="12">
+                      12 Months
+                    </option>
+
+                    <option value="24">
+                      24 Months
+                    </option>
+
+                    <option value="36">
+                      36 Months
+                    </option>
+
+                    <option value="48">
+                      48 Months
+                    </option>
                   </select>
                 </div>
-                <div className="col-md-6">
-                  <label className="form-label" htmlFor="monthlyIncome">Monthly income</label>
-                  <input
-                    className="form-control"
-                    id="monthlyIncome"
-                    min="1"
-                    name="monthlyIncome"
-                    onChange={handleChange}
-                    placeholder="850"
-                    type="number"
-                    value={formData.monthlyIncome}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label" htmlFor="phoneNumber">Phone number</label>
-                  <input
-                    className="form-control"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    onChange={handleChange}
-                    placeholder="+855 12 345 678"
-                    type="tel"
-                    value={formData.phoneNumber}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label" htmlFor="address">Address</label>
-                  <input
-                    className="form-control"
-                    id="address"
-                    name="address"
-                    onChange={handleChange}
-                    placeholder="Phnom Penh, Cambodia"
-                    type="text"
-                    value={formData.address}
-                  />
-                </div>
+
                 <div className="col-12">
-                  <button className="btn btn-primary" type="submit">Submit application</button>
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                  >
+                    Submit Loan
+                  </button>
                 </div>
               </form>
 
-              {previewMessage && (
-                <div className="alert alert-info mt-4 mb-0" role="alert">
-                  {previewMessage}
+              {message && (
+                <div className="alert alert-info mt-4">
+                  {message}
                 </div>
               )}
             </div>

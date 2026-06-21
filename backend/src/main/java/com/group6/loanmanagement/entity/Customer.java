@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -41,6 +43,10 @@ public class Customer {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PrePersist
     void prePersist() {
@@ -118,4 +124,5 @@ public class Customer {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+    
 }
