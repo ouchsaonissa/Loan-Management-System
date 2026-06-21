@@ -35,7 +35,7 @@ class AuthControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    void registerCreatesCustomerWithSafeDefaults() throws Exception {
+    void registerCreatesCustomerFromRegistrationFields() throws Exception {
         String username = "registeredcustomer" + System.nanoTime();
 
         MvcResult registerResult = mockMvc.perform(post("/api/auth/register")
@@ -44,9 +44,15 @@ class AuthControllerTests {
                                 {
                                   "username": "%s",
                                   "password": "secret123",
-                                  "fullName": "Registered Customer"
+                                  "fullName": "Hiem Rika",
+                                  "email": "%s@example.com",
+                                  "gender": "Female",
+                                  "phoneNumber": "012345678",
+                                  "address": "Phnom Penh",
+                                  "job": "Teacher",
+                                  "monthlyIncome": 700.50
                                 }
-                                """.formatted(username)))
+                                """.formatted(username, username)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.role").value("CUSTOMER"))
                 .andReturn();
@@ -57,18 +63,34 @@ class AuthControllerTests {
         mockMvc.perform(get("/api/customers")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].fullName".formatted(username),
-                        hasItem("Registered Customer")))
-                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].gender".formatted(username),
-                        hasItem("Not Set")))
-                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].phoneNumber".formatted(username),
-                        hasItem("-")))
-                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].address".formatted(username),
-                        hasItem("-")))
-                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].job".formatted(username),
-                        hasItem("-")))
-                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].monthlyIncome".formatted(username),
-                        hasItem(0.00)));
+                .andExpect(jsonPath("$[?(@.email == '%s@example.com')].fullName".formatted(username),
+                        hasItem("Hiem Rika")))
+                .andExpect(jsonPath("$[?(@.email == '%s@example.com')].gender".formatted(username),
+                        hasItem("Female")))
+                .andExpect(jsonPath("$[?(@.email == '%s@example.com')].phoneNumber".formatted(username),
+                        hasItem("012345678")))
+                .andExpect(jsonPath("$[?(@.email == '%s@example.com')].address".formatted(username),
+                        hasItem("Phnom Penh")))
+                .andExpect(jsonPath("$[?(@.email == '%s@example.com')].job".formatted(username),
+                        hasItem("Teacher")))
+                .andExpect(jsonPath("$[?(@.email == '%s@example.com')].monthlyIncome".formatted(username),
+                        hasItem(700.50)));
+    }
+
+    @Test
+    void customerRegistrationRequiresCustomerFields() throws Exception {
+        String username = "missingcustomerfields" + System.nanoTime();
+
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "secret123",
+                                  "fullName": "Missing Customer Fields"
+                                }
+                                """.formatted(username)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

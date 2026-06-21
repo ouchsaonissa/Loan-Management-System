@@ -10,7 +10,8 @@ import com.group6.loanmanagement.entity.Role;
 import com.group6.loanmanagement.entity.User;
 import com.group6.loanmanagement.repository.CustomerRepository;
 import com.group6.loanmanagement.repository.UserRepository;
-import java.math.BigDecimal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AuthService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
     private static final String TOKEN_TYPE = "Bearer";
 
     private final UserRepository userRepository;
@@ -60,16 +62,9 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         if (savedUser.getRole() == Role.CUSTOMER) {
-            Customer customer = new Customer();
-            customer.setFullName(request.getFullName());
-            customer.setGender("Not Set");
-            customer.setEmail(username + "@pending.local");
-            customer.setPhoneNumber("-");
-            customer.setAddress("-");
-            customer.setJob("-");
-            customer.setMonthlyIncome(BigDecimal.ZERO);
-            customer.setUser(savedUser);
-            customerRepository.save(customer);
+            Customer customer = buildCustomerFromRegistration(request, savedUser);
+            Customer savedCustomer = customerRepository.save(customer);
+            LOGGER.info("Created customer record {} for registered user {}", savedCustomer.getId(), savedUser.getId());
         }
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
@@ -97,6 +92,39 @@ public class AuthService {
         return buildAuthResponse(refreshToken.getUser(), refreshToken.getToken());
     }
 
+    private Customer buildCustomerFromRegistration(RegisterRequest request, User savedUser) {
+        String email = requireRegistrationValue(request.getEmail(), "Email is required for customer registration");
+        if (customerRepository.existsByEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Customer email already exists");
+        }
+        if (request.getMonthlyIncome() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Monthly income is required for customer registration");
+        }
+
+        Customer customer = new Customer();
+        customer.setFullName(requireRegistrationValue(request.getFullName(),
+                "Full name is required for customer registration"));
+        customer.setGender(requireRegistrationValue(request.getGender(),
+                "Gender is required for customer registration"));
+        customer.setEmail(email);
+        customer.setPhoneNumber(requireRegistrationValue(request.getPhoneNumber(),
+                "Phone number is required for customer registration"));
+        customer.setAddress(requireRegistrationValue(request.getAddress(),
+                "Address is required for customer registration"));
+        customer.setJob(requireRegistrationValue(request.getJob(),
+                "Job is required for customer registration"));
+        customer.setMonthlyIncome(request.getMonthlyIncome());
+        customer.setUser(savedUser);
+        return customer;
+    }
+
+    private String requireRegistrationValue(String value, String message) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
+        return value.trim();
+    }
 
     private AuthResponse buildAuthResponse(User user, String refreshToken) {
         return new AuthResponse(
