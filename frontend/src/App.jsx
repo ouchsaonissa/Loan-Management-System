@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Layout from './components/Layout.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import CustomerLayout from './components/customer/CustomerLayout.jsx';
 import CustomerForm from './pages/CustomerForm.jsx';
 import Customers from './pages/Customers.jsx';
@@ -109,12 +110,12 @@ function App() {
     }
 
     if (currentPath.startsWith('/admin') && !isAdminRole(role)) {
-      navigateTo(getDashboardPath(role), true);
+      navigateTo('/login', true);
       return;
     }
 
     if (currentPath.startsWith('/customer') && !isCustomerRole(role)) {
-      navigateTo(getDashboardPath(role), true);
+      navigateTo('/login', true);
       return;
     }
 
@@ -132,10 +133,6 @@ function App() {
       role: loginData.role?.toUpperCase(),
       userId: loginData.userId,
     };
-
-    Object.entries(userData).forEach(([key, value]) => {
-      localStorage.setItem(key, value ?? '');
-    });
 
     setCurrentUser(userData);
     navigateTo(getDashboardPath(userData.role), true);
@@ -164,42 +161,38 @@ function App() {
     return <Login onLogin={handleLogin} onShowRegister={() => navigateTo('/register')} />;
   }
 
-  if (currentPath.startsWith('/admin') && !isAdminRole(currentUser.role)) {
-    return null;
-  }
-
-  if (currentPath.startsWith('/customer') && !isCustomerRole(currentUser.role)) {
-    return null;
-  }
-
   const customerRoute = customerRoutes[currentPath];
 
   if (customerRoute) {
     const CustomerPage = customerRoute.page;
 
     return (
-      <CustomerLayout
-        activePage={customerRoute.title}
-        currentUser={currentUser}
-        onLogout={handleLogout}
-        onNavigate={handleCustomerNavigate}
-      >
-        <CustomerPage onNavigate={handleCustomerNavigate} />
-      </CustomerLayout>
+      <ProtectedRoute requiredRole="CUSTOMER" redirectToLogin={() => navigateTo('/login', true)}>
+        <CustomerLayout
+          activePage={customerRoute.title}
+          currentUser={currentUser}
+          onLogout={handleLogout}
+          onNavigate={handleCustomerNavigate}
+        >
+          <CustomerPage onNavigate={handleCustomerNavigate} />
+        </CustomerLayout>
+      </ProtectedRoute>
     );
   }
 
   const adminRoute = adminRoutes[currentPath] || adminRoutes['/admin/dashboard'];
 
   return (
-    <Layout
-      activePage={adminRoute.title}
-      currentUser={currentUser}
-      onLogout={handleLogout}
-      onNavigate={navigateTo}
-    >
-      {adminRoute.page}
-    </Layout>
+    <ProtectedRoute requiredRole="ADMIN" redirectToLogin={() => navigateTo('/login', true)}>
+      <Layout
+        activePage={adminRoute.title}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        onNavigate={navigateTo}
+      >
+        {adminRoute.page}
+      </Layout>
+    </ProtectedRoute>
   );
 }
 
