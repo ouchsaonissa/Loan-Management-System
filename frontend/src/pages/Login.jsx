@@ -14,7 +14,20 @@ function Login({ onLogin, onShowRegister }) {
 
     try {
       const { data } = await apiClient.post('/auth/login', { username, password });
-      onLogin(data);
+      const loginData = {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+        userId: data.userId,
+        username: data.username,
+        fullName: data.fullName,
+        role: data.role?.toUpperCase(),
+      };
+
+      Object.entries(loginData).forEach(([key, value]) => {
+        localStorage.setItem(key, value ?? '');
+      });
+
+      onLogin(loginData);
     } catch (loginError) {
       const message = loginError.response?.data?.message || 'Login failed. Please check your username and password.';
       setError(message);
