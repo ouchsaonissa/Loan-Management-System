@@ -1,8 +1,11 @@
 package com.group6.loanmanagement.dto;
 
 import com.group6.loanmanagement.entity.Role;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class RegisterRequest {
 
@@ -19,6 +22,25 @@ public class RegisterRequest {
     private String fullName;
 
     private Role role;
+
+    @Size(max = 30)
+    private String gender;
+
+    @Email
+    @Size(max = 150)
+    private String email;
+
+    @Size(max = 30)
+    private String phoneNumber;
+
+    @Size(max = 255)
+    private String address;
+
+    @Size(max = 100)
+    private String job;
+
+    @DecimalMin(value = "0.00", inclusive = true)
+    private BigDecimal monthlyIncome;
 
     public String getUsername() {
         return username;
@@ -50,5 +72,53 @@ public class RegisterRequest {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public BigDecimal getMonthlyIncome() {
+        return monthlyIncome;
+    }
+
+    public void setMonthlyIncome(BigDecimal monthlyIncome) {
+        this.monthlyIncome = monthlyIncome;
     }
 }

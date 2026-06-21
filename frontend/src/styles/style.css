@@ -140,7 +140,9 @@ textarea {
   font-weight: 700;
 }
 
-.login-field input {
+.login-field input,
+.login-field select,
+.login-field textarea {
   background: #f8fafc;
   border: 1px solid #dbe3ef;
   border-radius: 14px;
@@ -151,7 +153,9 @@ textarea {
   width: 100%;
 }
 
-.login-field input:focus {
+.login-field input:focus,
+.login-field select:focus,
+.login-field textarea:focus {
   background: #ffffff;
   border-color: var(--primary);
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
@@ -356,7 +360,7 @@ textarea {
 }
 
 .register-card {
-  max-width: 520px;
+  max-width: 760px;
 }
 
 .register-header {
@@ -365,6 +369,18 @@ textarea {
 
 .register-form {
   gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.register-full-width,
+.register-form .login-button {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .register-form {
+    grid-template-columns: 1fr;
+  }
 }
 
 .auth-switch-text {

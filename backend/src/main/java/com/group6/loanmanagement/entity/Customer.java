@@ -45,7 +45,7 @@ public class Customer {
     private Instant createdAt;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
     @PrePersist
@@ -124,5 +124,12 @@ public class Customer {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
-    
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
