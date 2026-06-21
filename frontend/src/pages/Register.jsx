@@ -7,7 +7,12 @@ function Register({ onBackToLogin, onRegisterSuccess }) {
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
+    gender: '',
     email: '',
+    phoneNumber: '',
+    address: '',
+    job: '',
+    monthlyIncome: '',
     password: '',
     confirmPassword: '',
   });
@@ -37,22 +42,27 @@ function Register({ onBackToLogin, onRegisterSuccess }) {
       const { data } = await apiClient.post('/auth/register', {
         fullName: formData.fullName,
         username: formData.username,
+        gender: formData.gender,
         email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+        job: formData.job,
+        monthlyIncome: formData.monthlyIncome,
         password: formData.password,
         role: CUSTOMER_ROLE,
       });
 
       onRegisterSuccess(data);
     } catch (registerError) {
-        console.log(registerError.response);
-        const message =
+      const message =
         registerError.response?.data?.message ||
         JSON.stringify(registerError.response?.data) ||
         registerError.message;
 
-  setError(message);
-  
-}
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -105,6 +115,78 @@ function Register({ onBackToLogin, onRegisterSuccess }) {
               placeholder="Enter email address"
               autoComplete="email"
               value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="gender">Gender</label>
+            <select
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select gender</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="phoneNumber">Phone Number</label>
+            <input
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              placeholder="Enter phone number"
+              autoComplete="tel"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="login-field register-full-width">
+            <label htmlFor="address">Address</label>
+            <textarea
+              id="address"
+              name="address"
+              placeholder="Enter address"
+              autoComplete="street-address"
+              rows="3"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="job">Job</label>
+            <input
+              id="job"
+              name="job"
+              type="text"
+              placeholder="Enter job"
+              value={formData.job}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="login-field">
+            <label htmlFor="monthlyIncome">Monthly Income</label>
+            <input
+              id="monthlyIncome"
+              name="monthlyIncome"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Enter monthly income"
+              value={formData.monthlyIncome}
               onChange={handleChange}
               required
             />

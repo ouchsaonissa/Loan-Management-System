@@ -4,9 +4,11 @@ import com.group6.loanmanagement.dto.AuthResponse;
 import com.group6.loanmanagement.dto.LoginRequest;
 import com.group6.loanmanagement.dto.RefreshTokenRequest;
 import com.group6.loanmanagement.dto.RegisterRequest;
+import com.group6.loanmanagement.entity.Customer;
 import com.group6.loanmanagement.entity.RefreshToken;
 import com.group6.loanmanagement.entity.Role;
 import com.group6.loanmanagement.entity.User;
+import com.group6.loanmanagement.repository.CustomerRepository;
 import com.group6.loanmanagement.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,15 +25,17 @@ public class AuthService {
     private static final String TOKEN_TYPE = "Bearer";
 
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+    public AuthService(UserRepository userRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager, JwtService jwtService,
             RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
+        this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -45,13 +49,35 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
 
+        Role role = request.getRole() == null ? Role.CUSTOMER : request.getRole();
+        if (role == Role.CUSTOMER) {
+            validateCustomerProfile(request);
+            String email = normalize(request.getEmail());
+            if (customerRepository.existsByEmail(email)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Customer email already exists");
+            }
+        }
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName().trim());
-        user.setRole(request.getRole() == null ? Role.CUSTOMER : request.getRole());
+        user.setRole(role);
 
         User savedUser = userRepository.save(user);
+        if (savedUser.getRole() == Role.CUSTOMER) {
+            Customer customer = new Customer();
+            customer.setFullName(savedUser.getFullName());
+            customer.setGender(request.getGender().trim());
+            customer.setEmail(normalize(request.getEmail()));
+            customer.setPhoneNumber(request.getPhoneNumber().trim());
+            customer.setAddress(request.getAddress().trim());
+            customer.setJob(request.getJob().trim());
+            customer.setMonthlyIncome(request.getMonthlyIncome());
+            customer.setUser(savedUser);
+            customerRepository.save(customer);
+        }
+
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
         return buildAuthResponse(savedUser, refreshToken.getToken());
     }
@@ -75,6 +101,22 @@ public class AuthService {
     public AuthResponse refresh(RefreshTokenRequest request) {
         RefreshToken refreshToken = refreshTokenService.rotateRefreshToken(request.getRefreshToken());
         return buildAuthResponse(refreshToken.getUser(), refreshToken.getToken());
+    }
+
+    private void validateCustomerProfile(RegisterRequest request) {
+        if (isBlank(request.getGender()) || isBlank(request.getEmail()) || isBlank(request.getPhoneNumber())
+                || isBlank(request.getAddress()) || isBlank(request.getJob()) || request.getMonthlyIncome() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Customer registration requires gender, email, phone number, address, job, and monthly income");
+        }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
+    }
+
+    private String normalize(String value) {
+        return value == null ? null : value.trim().toLowerCase();
     }
 
     private AuthResponse buildAuthResponse(User user, String refreshToken) {
