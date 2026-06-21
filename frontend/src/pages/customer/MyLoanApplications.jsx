@@ -24,40 +24,86 @@ function MyLoanApplications() {
     }
   };
 
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "APPROVED":
+        return (
+          <span className="badge bg-success">
+            🟢 APPROVED
+          </span>
+        );
+
+      case "PENDING":
+        return (
+          <span className="badge bg-warning text-dark">
+            🟡 PENDING
+          </span>
+        );
+
+      case "REJECTED":
+        return (
+          <span className="badge bg-danger">
+            🔴 REJECTED
+          </span>
+        );
+
+      default:
+        return (
+          <span className="badge bg-secondary">
+            {status}
+          </span>
+        );
+    }
+  };
+
   return (
     <div className="customer-page">
-
       <h2 className="mb-4">
         My Loan Applications
       </h2>
 
-      <div className="card">
+      <div className="card shadow-sm">
         <div className="card-body">
+          {loans.length === 0 ? (
+            <div className="text-center py-4">
+              <h5>No loan applications found</h5>
+              <p className="text-muted mb-0">
+                Apply for a loan to see your applications here.
+              </p>
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Term (Months)</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Amount</th>
-                <th>Term</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+                <tbody>
+                  {loans.map((loan) => (
+                    <tr key={loan.id}>
+                      <td>
+                        <strong>
+                          ${Number(loan.amount).toLocaleString()}
+                        </strong>
+                      </td>
 
-            <tbody>
-              {loans.map((loan) => (
-                <tr key={loan.id}>
-                  <td>${loan.amount}</td>
-                  <td>{loan.termMonths}</td>
-                  <td>{loan.status}</td>
-                </tr>
-              ))}
-            </tbody>
+                      <td>{loan.termMonths}</td>
 
-          </table>
-
+                      <td>
+                        {getStatusBadge(loan.status)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
-
     </div>
   );
 }

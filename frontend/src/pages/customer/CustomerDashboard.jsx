@@ -67,45 +67,59 @@ function CustomerDashboard({ onNavigate }) {
                 onNavigate("Apply for Loan")
               }
             >
-              Apply for New Loan
+              Apply for Loan
             </button>
           </div>
         </div>
       </div>
 
-      <div className="row g-3">
+      <div className="row g-4">
         <div className="col-md-3">
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-body">
-              <h2>{stats.total}</h2>
-              <p>Total Applications</p>
+              <h1>{stats.total}</h1>
+              <p className="mb-0">
+                Total Applications
+              </p>
             </div>
           </div>
         </div>
 
         <div className="col-md-3">
-          <div className="card">
+          <div className="card shadow-sm border-start border-success border-4">
             <div className="card-body">
-              <h2>{stats.approved}</h2>
-              <p>Approved</p>
+              <h1 className="text-success">
+                {stats.approved}
+              </h1>
+              <p className="mb-0">
+                🟢 Approved
+              </p>
             </div>
           </div>
         </div>
 
         <div className="col-md-3">
-          <div className="card">
+          <div className="card shadow-sm border-start border-warning border-4">
             <div className="card-body">
-              <h2>{stats.pending}</h2>
-              <p>Pending</p>
+              <h1 className="text-warning">
+                {stats.pending}
+              </h1>
+              <p className="mb-0">
+                🟡 Pending
+              </p>
             </div>
           </div>
         </div>
 
         <div className="col-md-3">
-          <div className="card">
+          <div className="card shadow-sm border-start border-danger border-4">
             <div className="card-body">
-              <h2>{stats.rejected}</h2>
-              <p>Rejected</p>
+              <h1 className="text-danger">
+                {stats.rejected}
+              </h1>
+              <p className="mb-0">
+                🔴 Rejected
+              </p>
             </div>
           </div>
         </div>

@@ -97,15 +97,17 @@ function ApplyLoan() {
                     Loan Amount
                   </label>
 
-                  <input
-                    className="form-control"
-                    type="number"
-                    min="1"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleChange}
-                    required
-                  />
+                 <input
+  className="form-control"
+  type="number"
+  name="amount"
+  min="100"
+  step="100"
+  placeholder="Example: 5000"
+  value={formData.amount}
+  onChange={handleChange}
+  required
+/>
                 </div>
 
                 <div className="col-md-6">

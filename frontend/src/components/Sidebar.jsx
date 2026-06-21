@@ -1,15 +1,23 @@
 const menuItems = [
   {
-    label: "Customer Dashboard",
-    icon: "🏠",
+    label: "Dashboard",
+    path: "/admin/dashboard",
+    icon: "📊",
   },
   {
-    label: "My Applications",
-    icon: "📋",
+    label: "Customers",
+    path: "/admin/customers",
+    icon: "👥",
   },
   {
-    label: "Apply for Loan",
-    icon: "📝",
+    label: "Loans",
+    path: "/admin/loans",
+    icon: "💰",
+  },
+  {
+    label: "Payments",
+    path: "/admin/payments",
+    icon: "💳",
   },
 ];
 
@@ -18,6 +26,7 @@ function Sidebar({ activePage, onNavigate }) {
     <aside className="sidebar">
       <div className="sidebar-brand">
         <div className="brand-icon">LMS</div>
+
         <div>
           <h5 className="mb-0">Group 6</h5>
           <small>Loan dashboard</small>
@@ -27,9 +36,11 @@ function Sidebar({ activePage, onNavigate }) {
       <div className="sidebar-menu">
         {menuItems.map((item) => (
           <button
-            className={`sidebar-link ${activePage === item.label ? 'active' : ''}`}
             key={item.label}
             type="button"
+            className={`sidebar-link ${
+              activePage === item.label ? "active" : ""
+            }`}
             onClick={() => onNavigate(item.path)}
           >
             <span>{item.icon}</span>
