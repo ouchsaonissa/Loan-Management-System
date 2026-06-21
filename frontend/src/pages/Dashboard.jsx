@@ -33,8 +33,8 @@ function Dashboard() {
         apiClient.get("/loans"),
       ]);
 
-      setCustomers(customersResponse.data);
-      setLoans(loansResponse.data);
+      setCustomers(Array.isArray(customersResponse.data) ? customersResponse.data : []);
+      setLoans(Array.isArray(loansResponse.data) ? loansResponse.data : []);
     } catch (error) {
       console.error("Failed to load dashboard data", error);
       setError("Unable to load dashboard data. Please try again later.");
@@ -46,28 +46,56 @@ function Dashboard() {
   const stats = useMemo(
     () => [
       {
-        label: "Total Customers",
+        label: "Customers",
         value: customers.length,
         color: "primary",
       },
       {
-        label: "Total Loans",
-        value: loans.length,
-        color: "info",
+        label: "Active Loans",
+        value: loans.filter((loan) => loan.status === "APPROVED").length,
+        color: "success",
       },
       {
-        label: "Pending Loans",
+        label: "Pending Reviews",
         value: loans.filter((loan) => loan.status === "PENDING").length,
         color: "warning",
       },
       {
-        label: "Approved Loans",
-        value: loans.filter((loan) => loan.status === "APPROVED").length,
-        color: "success",
+        label: "Rejected Loans",
+        value: loans.filter((loan) => loan.status === "REJECTED").length,
+        color: "danger",
       },
     ],
     [customers, loans]
   );
+
+  const recentLoans = useMemo(
+    () =>
+      [...loans]
+        .sort((firstLoan, secondLoan) => new Date(secondLoan.createdAt) - new Date(firstLoan.createdAt))
+        .slice(0, 5),
+    [loans]
+  );
+
+  const hasDashboardData = customers.length > 0 || loans.length > 0;
+
+  const formatCurrency = (value) => {
+    const amount = Number(value ?? 0);
+
+    return amount.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    });
+  };
+
+  const formatDate = (value) => {
+    if (!value) {
+      return "-";
+    }
+
+    return new Date(value).toLocaleString();
+  };
 
   return (
     <div>
@@ -112,30 +140,36 @@ function Dashboard() {
                 <tr>
                   <th>Customer ID</th>
                   <th>Amount</th>
-                  <th>Term (Months)</th>
+                  <th>Term</th>
                   <th>Status</th>
+                  <th>Created Date</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="4">Loading dashboard data...</td>
+                    <td colSpan="5">Loading dashboard data...</td>
                   </tr>
-                ) : loans.length === 0 ? (
+                ) : !hasDashboardData ? (
                   <tr>
-                    <td colSpan="4">No loan applications found.</td>
+                    <td colSpan="5">No dashboard data available</td>
+                  </tr>
+                ) : recentLoans.length === 0 ? (
+                  <tr>
+                    <td colSpan="5">No recent loan activity</td>
                   </tr>
                 ) : (
-                  loans.map((loan) => (
+                  recentLoans.map((loan) => (
                     <tr key={loan.id}>
                       <td>{loan.customerId}</td>
-                      <td>${loan.amount}</td>
-                      <td>{loan.termMonths}</td>
+                      <td>{formatCurrency(loan.amount)}</td>
+                      <td>{loan.termMonths} months</td>
                       <td>
                         <span className={getStatusBadgeClass(loan.status)}>
                           {loan.status}
                         </span>
                       </td>
+                      <td>{formatDate(loan.createdAt)}</td>
                     </tr>
                   ))
                 )}
