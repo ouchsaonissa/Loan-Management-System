@@ -11,10 +11,29 @@ function Loans() {
 
   const loadLoans = async () => {
     try {
-      const { data } = await apiClient.get("/loans");
-      setLoans(data);
+      setLoading(true);
+
+      const [loansResponse, customersResponse] = await Promise.all([
+        apiClient.get("/loans"),
+        apiClient.get("/customers"),
+      ]);
+
+      const customerNameById = new Map(
+        (Array.isArray(customersResponse.data) ? customersResponse.data : []).map((customer) => [
+          customer.id,
+          customer.fullName,
+        ])
+      );
+
+      const loansWithCustomerNames = (Array.isArray(loansResponse.data) ? loansResponse.data : []).map((loan) => ({
+        ...loan,
+        customerName: customerNameById.get(loan.customerId) || "Unknown Customer",
+      }));
+
+      setLoans(loansWithCustomerNames);
     } catch (error) {
       console.error("Failed to load loans", error);
+      setLoans([]);
     } finally {
       setLoading(false);
     }
@@ -55,7 +74,7 @@ function Loans() {
 
             <thead>
               <tr>
-                <th>Customer ID</th>
+                <th>Customer Name</th>
                 <th>Amount</th>
                 <th>Term</th>
                 <th>Status</th>
@@ -81,7 +100,7 @@ function Loans() {
                 loans.map((loan) => (
                   <tr key={loan.id}>
 
-                    <td>{loan.customerId}</td>
+                    <td>{loan.customerName}</td>
 
                     <td>
                       ${loan.amount}
