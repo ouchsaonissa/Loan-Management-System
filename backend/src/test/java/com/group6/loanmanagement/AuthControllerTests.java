@@ -1,7 +1,9 @@
 package com.group6.loanmanagement;
 
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.blankOrNullString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,6 +33,43 @@ class AuthControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    void registerCreatesCustomerWithSafeDefaults() throws Exception {
+        String username = "registeredcustomer" + System.nanoTime();
+
+        MvcResult registerResult = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "secret123",
+                                  "fullName": "Registered Customer"
+                                }
+                                """.formatted(username)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.role").value("CUSTOMER"))
+                .andReturn();
+
+        String accessToken = registerResult.getResponse().getContentAsString()
+                .replaceAll(".*\"accessToken\":\"([^\"]+)\".*", "$1");
+
+        mockMvc.perform(get("/api/customers")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].fullName".formatted(username),
+                        hasItem("Registered Customer")))
+                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].gender".formatted(username),
+                        hasItem("Not Set")))
+                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].phoneNumber".formatted(username),
+                        hasItem("-")))
+                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].address".formatted(username),
+                        hasItem("-")))
+                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].job".formatted(username),
+                        hasItem("-")))
+                .andExpect(jsonPath("$[?(@.email == '%s@pending.local')].monthlyIncome".formatted(username),
+                        hasItem(0.00)));
+    }
 
     @Test
     void registerLoginAndRefreshReturnTokens() throws Exception {
