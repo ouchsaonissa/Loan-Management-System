@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import apiClient from '../api/axiosConfig.js';
+import apiClient, { getApiErrorMessage } from '../api/axiosConfig.js';
 
 const CUSTOMER_ROLE = 'CUSTOMER';
 
@@ -39,27 +39,40 @@ function Register({ onBackToLogin, onRegisterSuccess }) {
     setIsSubmitting(true);
 
     try {
-      const { data } = await apiClient.post('/auth/register', {
-        fullName: formData.fullName,
-        username: formData.username,
+      const payload = {
+        fullName: formData.fullName.trim(),
+        username: formData.username.trim(),
         gender: formData.gender,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        address: formData.address,
-        job: formData.job,
+        email: formData.email.trim(),
+        phoneNumber: formData.phoneNumber.trim(),
+        address: formData.address.trim(),
+        job: formData.job.trim(),
         monthlyIncome: formData.monthlyIncome,
         password: formData.password,
         role: CUSTOMER_ROLE,
+      };
+
+      console.log("Register payload", payload);
+      const response = await apiClient.post('/auth/register', payload);
+      console.log("Register response", response);
+
+      const registerData = response.data;
+      const loginData = {
+        accessToken: registerData.accessToken,
+        refreshToken: registerData.refreshToken,
+        userId: registerData.userId,
+        username: registerData.username,
+        fullName: registerData.fullName,
+        role: registerData.role?.toUpperCase(),
+      };
+
+      Object.entries(loginData).forEach(([key, value]) => {
+        localStorage.setItem(key, value ?? '');
       });
 
-      onRegisterSuccess(data);
+      onRegisterSuccess(loginData);
     } catch (registerError) {
-      const message =
-        registerError.response?.data?.message ||
-        JSON.stringify(registerError.response?.data) ||
-        registerError.message;
-
-      setError(message);
+      setError(getApiErrorMessage(registerError, 'Registration failed. Please check your details.'));
     } finally {
       setIsSubmitting(false);
     }
