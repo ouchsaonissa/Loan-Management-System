@@ -47,7 +47,7 @@ public class AuthService {
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        String username = request.getUsername().trim();
+        String username = requireRegistrationValue(request.getUsername(), "Username is required");
         if (userRepository.existsByUsername(username)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
@@ -57,14 +57,15 @@ public class AuthService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFullName(request.getFullName().trim());
+        user.setFullName(requireRegistrationValue(request.getFullName(), "Full name is required"));
         user.setRole(role);
 
         User savedUser = userRepository.save(user);
         if (savedUser.getRole() == Role.CUSTOMER) {
+            LOGGER.info("Creating customer for user {}", savedUser.getUsername());
             Customer customer = buildCustomerFromRegistration(request, savedUser);
             Customer savedCustomer = customerRepository.save(customer);
-            LOGGER.info("Created customer record {} for registered user {}", savedCustomer.getId(), savedUser.getId());
+            LOGGER.info("Customer saved with id {}", savedCustomer.getId());
         }
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
