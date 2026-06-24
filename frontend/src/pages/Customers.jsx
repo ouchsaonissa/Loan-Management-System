@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiClient from "../api/axiosConfig";
+import apiClient, { getApiErrorMessage } from "../api/axiosConfig";
 
 const formatCurrency = (value) => {
   const amount = Number(value ?? 0);
@@ -34,10 +34,14 @@ function Customers() {
       setError("");
 
       const { data } = await apiClient.get("/customers");
+      setCustomers(
+       data.filter((user) => user.role === "CUSTOMER")
+);
+      console.log("Customers API response", data);
       setCustomers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to load customers", error);
-      setError("Unable to load customers. Please try again later.");
+      setError(getApiErrorMessage(error, "Unable to load customers. Please try again later."));
       setCustomers([]);
     } finally {
       setLoading(false);
