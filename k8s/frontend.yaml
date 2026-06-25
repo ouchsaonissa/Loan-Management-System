@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: buncheang22/loan-management-frontend:latest
+          image: ouchsaonisa/loan-management-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
