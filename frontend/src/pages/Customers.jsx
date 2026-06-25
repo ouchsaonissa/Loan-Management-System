@@ -34,6 +34,9 @@ function Customers() {
       setError("");
 
       const { data } = await apiClient.get("/customers");
+      setCustomers(
+       data.filter((user) => user.role === "CUSTOMER")
+);
       console.log("Customers API response", data);
       setCustomers(Array.isArray(data) ? data : []);
     } catch (error) {

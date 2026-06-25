@@ -1,5 +1,6 @@
 package com.group6.loanmanagement.service;
 
+
 import com.group6.loanmanagement.dto.AuthResponse;
 import com.group6.loanmanagement.dto.LoginRequest;
 import com.group6.loanmanagement.dto.RefreshTokenRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
 
 @Service
 public class AuthService {
@@ -65,7 +67,9 @@ public class AuthService {
             LOGGER.info("Creating customer for user {}", savedUser.getUsername());
             Customer customer = buildCustomerFromRegistration(request, savedUser);
             Customer savedCustomer = customerRepository.save(customer);
-            LOGGER.info("Customer saved with id {}", savedCustomer.getId());
+            LOGGER.info("Created customer record {} for registered user {}", 
+            savedCustomer.getId(), 
+            savedUser.getId());
         }
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);

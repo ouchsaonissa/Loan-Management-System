@@ -158,9 +158,9 @@ function App() {
   if (currentPath === '/register' && !currentUser.accessToken) {
     return (
       <Register
-        onBackToLogin={() => navigateTo('/login')}
-        onRegisterSuccess={handleLogin}
-      />
+       onBackToLogin={() => navigateTo('/login')}
+       onRegisterSuccess={() => navigateTo('/login')}
+/>
     );
   }
 
