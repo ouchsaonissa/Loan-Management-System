@@ -6,7 +6,7 @@ metadata:
     # If you use cert-manager later, add SSL annotations here
 spec:
   rules:
-    - host: sophanukk.xyz
+    - host: groupsix.xyz
       http:
         paths:
           - path: /

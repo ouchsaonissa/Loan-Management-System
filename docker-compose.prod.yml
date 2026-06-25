@@ -10,7 +10,7 @@ services:
       - loan_mysql_data:/var/lib/mysql
 
   backend:
-    image: buncheang22/loan-management-backend:latest
+    image: ouchsaonisa/loan-management-backend:latest
     container_name: loan-management-backend
     restart: always
     depends_on:
@@ -22,7 +22,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production-immediately}
 
   frontend:
-    image: buncheang22/loan-management-frontend:latest
+    image: ouchsaonisa/loan-management-frontend:latest
     container_name: loan-management-frontend
     restart: always
     depends_on:
