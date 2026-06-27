@@ -1,17 +1,17 @@
 const customerMenuItems = [
   {
     label: 'Customer Dashboard',
-    icon: '🏠',
+    
     path: '/customer/dashboard',
   },
   {
     label: 'My Applications',
-    icon: '📋',
+    
     path: '/customer/my-applications',
   },
   {
     label: 'Apply for Loan',
-    icon: '📝',
+    
     path: '/customer/apply-loan',
   },
 ];

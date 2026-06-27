@@ -2,22 +2,22 @@ const menuItems = [
   {
     label: "Dashboard",
     path: "/admin/dashboard",
-    icon: "📊",
+    
   },
   {
     label: "Customers",
     path: "/admin/customers",
-    icon: "👥",
+    
   },
   {
     label: "Loans",
     path: "/admin/loans",
-    icon: "💰",
+    
   },
   {
     label: "Payments",
     path: "/admin/payments",
-    icon: "💳",
+    
   },
 ];
 
