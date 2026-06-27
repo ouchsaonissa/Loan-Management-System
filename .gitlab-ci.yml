@@ -1,0 +1,48 @@
+stages:
+  - test
+  - build-and-push
+
+variables:
+  DOCKER_DRIVER: overlay2
+  # Disable TLS for dind to avoid certificate issues in generic runners
+  DOCKER_TLS_CERTDIR: "" 
+
+test-backend:
+  stage: test
+  image: maven:3.9.5-eclipse-temurin-21
+  script:
+    - cd backend
+    - mvn test
+  only:
+    - main
+    - merge_requests
+
+build-and-push-backend:
+  stage: build-and-push
+  image: docker:24.0.5
+  services:
+    - name: docker:24.0.5-dind
+      alias: docker
+  before_script:
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  script:
+    - cd backend
+    - docker build -t $DOCKERHUB_USERNAME/loan-management-backend:latest -f Dockerfile .
+    - docker push $DOCKERHUB_USERNAME/loan-management-backend:latest
+  only:
+    - main
+
+build-and-push-frontend:
+  stage: build-and-push
+  image: docker:24.0.5
+  services:
+    - name: docker:24.0.5-dind
+      alias: docker
+  before_script:
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  script:
+    - cd frontend
+    - docker build -t $DOCKERHUB_USERNAME/loan-management-frontend:latest -f Dockerfile .
+    - docker push $DOCKERHUB_USERNAME/loan-management-frontend:latest
+  only:
+    - main

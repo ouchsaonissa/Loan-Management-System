@@ -1,0 +1,97 @@
+﻿loan-management-backend   | 
+loan-management-frontend  | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+loan-management-backend   |   .   ____          _            __ _ _
+loan-management-frontend  | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+loan-management-backend   |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+loan-management-frontend  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+loan-management-backend   | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+loan-management-backend   |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+loan-management-frontend  | 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+loan-management-frontend  | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+loan-management-backend   |   '  |____| .__|_| |_|_| |_\__, | / / / /
+loan-management-backend   |  =========|_|==============|___/=/_/_/_/
+loan-management-backend   | 
+loan-management-frontend  | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+loan-management-backend   |  :: Spring Boot ::                (v3.3.5)
+loan-management-frontend  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+loan-management-backend   | 
+loan-management-frontend  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+loan-management-frontend  | /docker-entrypoint.sh: Configuration complete; ready for start up
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: using the "epoll" event method
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: nginx/1.31.2
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0) 
+loan-management-backend   | 2026-06-22T14:50:27.287Z  INFO 1 --- [loan-management] [           main] c.g.l.LoanManagementApplication          : Starting LoanManagementApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 1 (/app/app.jar started by root in /app)
+loan-management-backend   | 2026-06-22T14:50:27.291Z  INFO 1 --- [loan-management] [           main] c.g.l.LoanManagementApplication          : No active profile set, falling back to 1 default profile: "default"
+loan-management-backend   | 2026-06-22T14:50:29.259Z  INFO 1 --- [loan-management] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+loan-management-backend   | 2026-06-22T14:50:29.370Z  INFO 1 --- [loan-management] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 94 ms. Found 4 JPA repository interfaces.
+loan-management-backend   | 2026-06-22T14:50:30.186Z  INFO 1 --- [loan-management] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+loan-management-backend   | 2026-06-22T14:50:30.200Z  INFO 1 --- [loan-management] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+loan-management-backend   | 2026-06-22T14:50:30.201Z  INFO 1 --- [loan-management] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+loan-management-backend   | 2026-06-22T14:50:30.247Z  INFO 1 --- [loan-management] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+loan-management-backend   | 2026-06-22T14:50:30.249Z  INFO 1 --- [loan-management] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2868 ms
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker processes
+loan-management-backend   | 2026-06-22T14:50:30.649Z  INFO 1 --- [loan-management] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 29
+loan-management-backend   | 2026-06-22T14:50:30.719Z  INFO 1 --- [loan-management] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+loan-management-backend   | 2026-06-22T14:50:30.769Z  INFO 1 --- [loan-management] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+loan-management-backend   | 2026-06-22T14:50:31.069Z  INFO 1 --- [loan-management] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+loan-management-backend   | 2026-06-22T14:50:31.103Z  INFO 1 --- [loan-management] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+loan-management-backend   | 2026-06-22T14:50:31.304Z  INFO 1 --- [loan-management] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7af9595d
+loan-management-backend   | 2026-06-22T14:50:31.308Z  INFO 1 --- [loan-management] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+loan-management-backend   | 2026-06-22T14:50:31.363Z  WARN 1 --- [loan-management] [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+loan-management-backend   | 2026-06-22T14:50:32.422Z  INFO 1 --- [loan-management] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+loan-management-backend   | 2026-06-22T14:50:32.520Z  INFO 1 --- [loan-management] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+loan-management-backend   | 2026-06-22T14:50:33.156Z  INFO 1 --- [loan-management] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+loan-management-backend   | 2026-06-22T14:50:33.157Z  WARN 1 --- [loan-management] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+loan-management-backend   | 2026-06-22T14:50:33.765Z  INFO 1 --- [loan-management] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+loan-management-backend   | 2026-06-22T14:50:34.385Z  INFO 1 --- [loan-management] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+loan-management-backend   | 2026-06-22T14:50:34.402Z  INFO 1 --- [loan-management] [           main] c.g.l.LoanManagementApplication          : Started LoanManagementApplication in 7.786 seconds (process running for 8.723)
+loan-management-backend   | 2026-06-22T15:19:57.640Z  INFO 1 --- [loan-management] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+loan-management-backend   | 2026-06-22T15:19:57.652Z  INFO 1 --- [loan-management] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+loan-management-backend   | 2026-06-22T15:19:57.687Z  INFO 1 --- [loan-management] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 35 ms
+loan-management-backend   | 2026-06-22T15:24:19.657Z  INFO 1 --- [loan-management] [nio-8080-exec-2] c.g.loanmanagement.service.AuthService   : Creating customer for user admin
+loan-management-backend   | 2026-06-22T15:24:19.717Z  INFO 1 --- [loan-management] [nio-8080-exec-2] c.g.loanmanagement.service.AuthService   : Customer saved with id 6df06d4e-3907-41be-a071-d892d6effaa0
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 30
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 31
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 32
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 33
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 34
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 35
+loan-management-mysql     | 2026-06-22 14:50:25+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.44-1.el9 started.
+loan-management-mysql     | 2026-06-22 14:50:25+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+loan-management-mysql     | 2026-06-22 14:50:25+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.44-1.el9 started.
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 36
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 37
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 38
+loan-management-mysql     | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 39
+loan-management-frontend  | 2026/06/22 14:50:26 [notice] 1#1: start worker process 40
+loan-management-mysql     | 2026-06-22T14:50:26.358538Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+loan-management-mysql     | 2026-06-22T14:50:26.362480Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.44) starting as process 1
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:19:53 +0000] "GET / HTTP/1.1" 200 407 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-mysql     | 2026-06-22T14:50:26.377647Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:19:53 +0000] "GET /assets/index-C_gBsYdX.js HTTP/1.1" 200 268307 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:19:53 +0000] "GET /assets/index-BI3so5bs.css HTTP/1.1" 200 236882 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:19:54 +0000] "GET /favicon.ico HTTP/1.1" 200 407 "http://localhost/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:19:58 +0000] "POST /api/auth/login HTTP/1.1" 401 117 "http://localhost/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:23:49 +0000] "GET /favicon.ico HTTP/1.1" 304 0 "http://localhost/register" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:19 +0000] "POST /api/auth/register HTTP/1.1" 201 453 "http://localhost/register" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:20 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:25 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/my-applications" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-mysql     | 2026-06-22T14:50:26.787358Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+loan-management-mysql     | 2026-06-22T14:50:27.107800Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:26 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/my-applications" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-mysql     | 2026-06-22T14:50:27.107864Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+loan-management-mysql     | 2026-06-22T14:50:27.114009Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:26 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:28 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/my-applications" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-mysql     | 2026-06-22T14:50:27.148769Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+loan-management-mysql     | 2026-06-22T14:50:27.149027Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.44'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:29 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/my-applications" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:29 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:30 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/my-applications" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:24:30 +0000] "GET /api/loans HTTP/1.1" 200 12 "http://localhost/customer/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:29:15 +0000] "GET /favicon.ico HTTP/1.1" 304 0 "http://localhost/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
+loan-management-frontend  | 172.24.0.1 - - [22/Jun/2026:15:29:18 +0000] "POST /api/auth/login HTTP/1.1" 401 117 "http://localhost/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" "-"
