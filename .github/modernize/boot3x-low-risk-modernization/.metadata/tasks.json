@@ -1,0 +1,101 @@
+{
+  "tasks": [
+    {
+      "id": "001-baseline-freeze",
+      "type": "validate",
+      "description": "Freeze the Spring Boot 3.3.5 and Java 21 baseline and confirm current runtime health",
+      "requirements": "Document the current application state, confirm Java 21 and Spring Boot 3.3.5 are in use, and establish the baseline for low-risk upgrades. Keep the project on the Boot 3.x line and avoid any major framework migration.",
+      "environmentConfiguration": null,
+      "skills": [
+        {
+          "name": "java-version-upgrade",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true",
+        "smokeTest": "true"
+      }
+    },
+    {
+      "id": "002-secure-config",
+      "type": "transform",
+      "description": "Secure configuration and separate runtime profiles for dev, test, and prod",
+      "requirements": "Move database credentials, JWT secrets, and environment-specific values to environment variables or secret-backed configuration; create profile-specific property files; remove hard-coded secrets from source-controlled config files; ensure safe defaults and explicit production values.",
+      "environmentConfiguration": null,
+      "skills": [
+        {
+          "name": "spring-boot-3x-security-hardening",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true",
+        "configIsExternalized": "true"
+      }
+    },
+    {
+      "id": "003-dependency-pinning",
+      "type": "upgrade",
+      "description": "Review and pin dependency versions to keep the Boot 3.3.x stack stable and predictable",
+      "requirements": "Audit direct dependencies, confirm compatibility with Spring Boot 3.3.x, pin security-sensitive versions where needed, and ensure no unexpected transitive drift is introduced. Avoid large jumps outside the current major line.",
+      "environmentConfiguration": null,
+      "skills": [
+        {
+          "name": "dependency-management",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "dependencyTreeClean": "true",
+        "noUnexpectedVersionDrift": "true"
+      }
+    },
+    {
+      "id": "004-minor-patch-upgrades",
+      "type": "upgrade",
+      "description": "Apply incremental patch/minor upgrades within the Spring Boot 3.x line only",
+      "requirements": "Upgrade to the latest stable Spring Boot 3.3.x patch release as appropriate, keep Java 21, and update Maven plugins only when compatible with the current runtime. Avoid Spring Boot 4 or cross-line upgrades during this modernization window.",
+      "environmentConfiguration": null,
+      "skills": [
+        {
+          "name": "spring-boot-3x-upgrade",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true",
+        "springBootVersionStable": "true"
+      }
+    },
+    {
+      "id": "005-operational-validation",
+      "type": "validate",
+      "description": "Prove the application remains healthy after modernization changes",
+      "requirements": "Run the full Maven verification flow, validate the health endpoint, and confirm the application starts in a controlled profile-driven environment without production secrets in source control.",
+      "environmentConfiguration": null,
+      "skills": [
+        {
+          "name": "runtime-validation",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "passUnitTests": "true",
+        "healthEndpointHealthy": "true"
+      }
+    }
+  ],
+  "metadata": {
+    "language": "java",
+    "planName": "boot3x-low-risk-modernization",
+    "projectName": "loan-management",
+    "createdAt": "2026-08-30T00:00:00Z",
+    "version": "1.0"
+  }
+}
