@@ -3,6 +3,7 @@ package com.group6.loanmanagement;
 import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,6 +83,100 @@ class LoanControllerTests {
                                 }
                                 """))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void approvesPendingLoanAndRejectsInvalidTransitions() throws Exception {
+        LoanTestData testData = createCustomerAndLoan();
+
+        mockMvc.perform(put("/api/loans/{id}/approve", testData.loanId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + testData.accessToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("APPROVED"));
+
+        mockMvc.perform(put("/api/loans/{id}/approve", testData.loanId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + testData.accessToken()))
+                .andExpect(status().isConflict());
+
+        mockMvc.perform(put("/api/loans/{id}/reject", testData.loanId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + testData.accessToken()))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void rejectsPendingLoanAndRejectsInvalidTransitions() throws Exception {
+        LoanTestData testData = createCustomerAndLoan();
+
+        mockMvc.perform(put("/api/loans/{id}/reject", testData.loanId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + testData.accessToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("REJECTED"));
+
+        mockMvc.perform(put("/api/loans/{id}/reject", testData.loanId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + testData.accessToken()))
+                .andExpect(status().isConflict());
+
+        mockMvc.perform(put("/api/loans/{id}/approve", testData.loanId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + testData.accessToken()))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void returnsNotFoundForLoanActionsOnMissingLoan() throws Exception {
+        String accessToken = createCustomerAndLoan().accessToken();
+        String missingLoanId = "00000000-0000-0000-0000-000000000001";
+
+        mockMvc.perform(put("/api/loans/{id}/approve", missingLoanId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(put("/api/loans/{id}/reject", missingLoanId)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                .andExpect(status().isNotFound());
+    }
+
+    private LoanTestData createCustomerAndLoan() throws Exception {
+        String username = "loanaction" + System.nanoTime();
+        MvcResult registration = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "secret123",
+                                  "fullName": "Loan Action Customer",
+                                  "email": "%s@example.com",
+                                  "gender": "Female",
+                                  "phoneNumber": "012345678",
+                                  "address": "Phnom Penh",
+                                  "job": "Teacher",
+                                  "monthlyIncome": 700.50
+                                }
+                                """.formatted(username, username)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String registrationResponse = registration.getResponse().getContentAsString();
+        String accessToken = extractJsonValue(registrationResponse, "accessToken");
+        String customerId = extractJsonValue(registrationResponse, "customerId");
+
+        MvcResult loan = mockMvc.perform(post("/api/loans")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "customerId": "%s",
+                                  "amount": 1500.00,
+                                  "termMonths": 12
+                                }
+                                """.formatted(customerId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("PENDING"))
+                .andReturn();
+
+        return new LoanTestData(accessToken, extractJsonValue(loan.getResponse().getContentAsString(), "id"));
+    }
+
+    private record LoanTestData(String accessToken, String loanId) {
     }
 
     private String extractJsonValue(String json, String key) {

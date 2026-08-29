@@ -65,19 +65,26 @@ public class LoanService {
     @Transactional
     public LoanResponse approveLoan(UUID id) {
 
-        Loan loan = findLoan(id);
-
-        loan.setStatus(LoanStatus.APPROVED);
-
-        return toResponse(loanRepository.save(loan));
+        return updatePendingLoanStatus(id, LoanStatus.APPROVED);
     }
 
     @Transactional
     public LoanResponse rejectLoan(UUID id) {
 
+        return updatePendingLoanStatus(id, LoanStatus.REJECTED);
+    }
+
+    private LoanResponse updatePendingLoanStatus(UUID id, LoanStatus status) {
+
         Loan loan = findLoan(id);
 
-        loan.setStatus(LoanStatus.REJECTED);
+        if (loan.getStatus() != LoanStatus.PENDING) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Only pending loans can be " + status.name().toLowerCase());
+        }
+
+        loan.setStatus(status);
 
         return toResponse(loanRepository.save(loan));
     }
