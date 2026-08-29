@@ -1,5 +1,6 @@
 package com.group6.loanmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.group6.loanmanagement.entity.Role;
 import java.util.UUID;
 
@@ -9,6 +10,8 @@ public class AuthResponse {
     private String refreshToken;
     private String tokenType;
     private UUID userId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private UUID customerId;
     private String username;
     private String fullName;
     private Role role;
@@ -16,12 +19,13 @@ public class AuthResponse {
     public AuthResponse() {
     }
 
-    public AuthResponse(String accessToken, String refreshToken, String tokenType, UUID userId,
+    public AuthResponse(String accessToken, String refreshToken, String tokenType, UUID userId, UUID customerId,
             String username, String fullName, Role role) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
         this.userId = userId;
+        this.customerId = customerId;
         this.username = username;
         this.fullName = fullName;
         this.role = role;
@@ -57,6 +61,14 @@ public class AuthResponse {
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
     public String getUsername() {

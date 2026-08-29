@@ -55,6 +55,7 @@ class AuthControllerTests {
                                 """.formatted(username, username)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.role").value("CUSTOMER"))
+                .andExpect(jsonPath("$.customerId", not(blankOrNullString())))
                 .andReturn();
 
         String accessToken = registerResult.getResponse().getContentAsString()
@@ -75,6 +76,56 @@ class AuthControllerTests {
                         hasItem("Teacher")))
                 .andExpect(jsonPath("$[?(@.email == '%s@example.com')].monthlyIncome".formatted(username),
                         hasItem(700.50)));
+    }
+
+    @Test
+    void customerLoginReturnsLinkedCustomerIdAndAdminLoginRemainsUnchanged() throws Exception {
+        String username = "customerlogin" + System.nanoTime();
+
+        MvcResult registration = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "secret123",
+                                  "fullName": "Customer Login",
+                                  "email": "%s@example.com",
+                                  "gender": "Female",
+                                  "phoneNumber": "012345678",
+                                  "address": "Phnom Penh",
+                                  "job": "Teacher",
+                                  "monthlyIncome": 700.50
+                                }
+                                """.formatted(username, username)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.userId", not(blankOrNullString())))
+                .andExpect(jsonPath("$.customerId", not(blankOrNullString())))
+                .andReturn();
+
+        String customerId = extractJsonValue(registration.getResponse().getContentAsString(), "customerId");
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "secret123"
+                                }
+                                """.formatted(username)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerId").value(customerId));
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "admin",
+                                  "password": "admin123"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", not(blankOrNullString())))
+                .andExpect(jsonPath("$.customerId").doesNotExist());
     }
 
     @Test
@@ -144,5 +195,9 @@ class AuthControllerTests {
                 .andExpect(jsonPath("$.accessToken", not(blankOrNullString())))
                 .andExpect(jsonPath("$.refreshToken", not(blankOrNullString())))
                 .andExpect(jsonPath("$.username").value(username));
+    }
+
+    private String extractJsonValue(String json, String key) {
+        return json.replaceAll(".*\\\"" + key + "\\\":\\\"([^\\\"]+)\\\".*", "$1");
     }
 }

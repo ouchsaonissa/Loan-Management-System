@@ -2,7 +2,7 @@ import { useState } from "react";
 import apiClient from "../../api/axiosConfig.js";
 
 const initialForm = {
-  customerId: localStorage.getItem("userId") || "",
+  customerId: localStorage.getItem("customerId") || "",
   amount: "",
   termMonths: "",
 };
@@ -25,8 +25,15 @@ function ApplyLoan() {
     setMessage("");
 
     try {
+      const customerId = localStorage.getItem("customerId");
+
+      if (!customerId) {
+        setMessage("Your customer profile is unavailable. Please sign in again.");
+        return;
+      }
+
       const payload = {
-        customerId: localStorage.getItem("userId"),
+        customerId,
         amount: Number(formData.amount),
         termMonths: Number(formData.termMonths),
       };
@@ -38,7 +45,7 @@ function ApplyLoan() {
       );
 
       setFormData({
-        customerId: localStorage.getItem("userId") || "",
+        customerId: localStorage.getItem("customerId") || "",
         amount: "",
         termMonths: "",
       });

@@ -2,9 +2,11 @@ package com.group6.loanmanagement.service;
 
 import com.group6.loanmanagement.dto.LoanRequest;
 import com.group6.loanmanagement.dto.LoanResponse;
+import com.group6.loanmanagement.entity.Customer;
 import com.group6.loanmanagement.entity.Loan;
 import com.group6.loanmanagement.entity.LoanStatus;
 import com.group6.loanmanagement.repository.LoanRepository;
+import com.group6.loanmanagement.repository.CustomerRepository;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
@@ -16,9 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class LoanService {
 
     private final LoanRepository loanRepository;
+    private final CustomerRepository customerRepository;
 
-    public LoanService(LoanRepository loanRepository) {
+    public LoanService(LoanRepository loanRepository, CustomerRepository customerRepository) {
         this.loanRepository = loanRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Transactional(readOnly = true)
@@ -45,9 +49,12 @@ public class LoanService {
     @Transactional
     public LoanResponse createLoan(LoanRequest request) {
 
+        Customer customer = customerRepository.findById(request.getCustomerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+
         Loan loan = new Loan();
 
-        loan.setCustomerId(request.getCustomerId());
+        loan.setCustomerId(customer.getId());
         loan.setAmount(request.getAmount());
         loan.setTermMonths(request.getTermMonths());
         loan.setStatus(LoanStatus.PENDING);

@@ -18,7 +18,7 @@ function CustomerDashboard({ onNavigate }) {
 
   const loadLoans = async () => {
     try {
-      const customerId = localStorage.getItem("userId");
+      const customerId = localStorage.getItem("customerId");
 
       const { data } = await apiClient.get("/loans");
 

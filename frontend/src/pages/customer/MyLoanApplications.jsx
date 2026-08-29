@@ -10,12 +10,12 @@ function MyLoanApplications() {
 
   const loadLoans = async () => {
     try {
-      const userId = localStorage.getItem("userId");
+      const customerId = localStorage.getItem("customerId");
 
       const { data } = await apiClient.get("/loans");
 
       const myLoans = data.filter(
-        (loan) => loan.customerId === userId
+        (loan) => loan.customerId === customerId
       );
 
       setLoans(myLoans);

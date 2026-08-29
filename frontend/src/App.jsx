@@ -54,6 +54,7 @@ function getCurrentUser() {
     fullName: localStorage.getItem('fullName'),
     role: localStorage.getItem('role')?.toUpperCase(),
     userId: localStorage.getItem('userId'),
+    customerId: localStorage.getItem('customerId'),
   };
 }
 
@@ -139,6 +140,7 @@ function App() {
       fullName: loginData.fullName,
       role: loginData.role?.toUpperCase(),
       userId: loginData.userId,
+      customerId: loginData.customerId,
     };
 
     setCurrentUser(userData);

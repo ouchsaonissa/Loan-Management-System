@@ -18,6 +18,7 @@ function Login({ onLogin, onShowRegister }) {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
         userId: data.userId,
+        customerId: data.role?.toUpperCase() === 'CUSTOMER' ? data.customerId : '',
         username: data.username,
         fullName: data.fullName,
         role: data.role?.toUpperCase(),

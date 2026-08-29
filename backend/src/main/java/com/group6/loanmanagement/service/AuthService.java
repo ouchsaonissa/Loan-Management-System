@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.UUID;
 
 
 @Service
@@ -132,11 +133,16 @@ public class AuthService {
     }
 
     private AuthResponse buildAuthResponse(User user, String refreshToken) {
+        UUID customerId = user.getRole() == Role.CUSTOMER
+                ? customerRepository.findByUser_Id(user.getId()).map(Customer::getId).orElse(null)
+                : null;
+
         return new AuthResponse(
                 jwtService.generateAccessToken(user),
                 refreshToken,
                 TOKEN_TYPE,
                 user.getId(),
+                customerId,
                 user.getUsername(),
                 user.getFullName(),
                 user.getRole());

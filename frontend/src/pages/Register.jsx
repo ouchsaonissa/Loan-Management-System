@@ -61,6 +61,7 @@ function Register({ onBackToLogin, onRegisterSuccess }) {
         accessToken: registerData.accessToken,
         refreshToken: registerData.refreshToken,
         userId: registerData.userId,
+        customerId: registerData.customerId,
         username: registerData.username,
         fullName: registerData.fullName,
         role: registerData.role?.toUpperCase(),
